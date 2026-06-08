@@ -1,0 +1,89 @@
+import { useMemo, useState } from 'react';
+import { FlatList, Modal, Pressable, Text, TextInput, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import type { Product } from '@/lib/types';
+import { formatMoney, formatNumber } from '@/lib/format';
+import { matchesAny } from '@/lib/arabic';
+import { useLocale } from '@/hooks/useLocale';
+
+interface Props {
+  visible: boolean;
+  products: Product[];
+  onClose: () => void;
+  onPick: (p: Product) => void;
+  currency?: string;
+}
+
+export function ProductPicker({ visible, products, onClose, onPick, currency }: Props) {
+  const { t } = useLocale();
+  const [q, setQ] = useState('');
+  const filtered = useMemo(() => {
+    if (!q) return products;
+    return products.filter((p) =>
+      matchesAny([p.name, p.sku, p.barcode, p.category], q),
+    );
+  }, [products, q]);
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <Pressable className="flex-1 justify-end bg-black/40" onPress={onClose}>
+        <Pressable
+          onPress={(e) => e.stopPropagation()}
+          className="max-h-[80%] rounded-t-3xl bg-white p-4 dark:bg-slate-900"
+        >
+          <View className="mb-3 flex-row items-center justify-between">
+            <Text className="text-lg font-bold text-slate-900 dark:text-slate-50">
+              {t('invoices.addProduct')}
+            </Text>
+            <Pressable onPress={onClose}>
+              <Ionicons name="close" size={22} color="#64748b" />
+            </Pressable>
+          </View>
+          <View className="mb-3 flex-row items-center rounded-xl border border-slate-200 px-3 dark:border-slate-700">
+            <Ionicons name="search" size={16} color="#94a3b8" />
+            <TextInput
+              autoFocus
+              value={q}
+              onChangeText={setQ}
+              placeholder={t('common.search')}
+              placeholderTextColor="#94a3b8"
+              className="ml-2 flex-1 py-2 text-slate-900 dark:text-slate-100"
+            />
+          </View>
+          <FlatList
+            data={filtered}
+            keyExtractor={(p) => p.id}
+            keyboardShouldPersistTaps="handled"
+            renderItem={({ item }) => (
+              <Pressable
+                onPress={() => {
+                  onPick(item);
+                  onClose();
+                }}
+                className="mb-1 flex-row items-center justify-between rounded-xl bg-slate-50 px-3 py-3 active:bg-slate-200 dark:bg-slate-800 dark:active:bg-slate-700"
+              >
+                <View className="flex-1 pr-3">
+                  <Text
+                    className="text-base font-semibold text-slate-900 dark:text-slate-100"
+                    numberOfLines={1}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text className="text-xs text-slate-500">
+                    {item.sku ? `${t('products.sku')} ${item.sku} · ` : ''}
+                    {t('ai.stockSuffix', { n: formatNumber(item.current_stock ?? 0) })}
+                  </Text>
+                </View>
+                <Text className="font-semibold text-emerald-600">
+                  {formatMoney(item.sale_price, currency)}
+                </Text>
+              </Pressable>
+            )}
+            ListEmptyComponent={
+              <Text className="py-6 text-center text-slate-500">{t('common.noResults')}</Text>
+            }
+          />
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+}
