@@ -84,9 +84,28 @@ export async function pickFileForAI(): Promise<PickedFileData | null> {
     }
   }
 
-  // Compact text preview (first 12 rows is enough for the AI to understand structure).
-  const sampleSize = Math.min(12, rows.length);
-  const sample = rows.slice(0, sampleSize);
+  // Remove completely empty rows from the entire dataset
+  rows = rows.filter((row) => {
+    let filled = 0;
+    for (const key of headers) {
+      if (String(row[key] ?? '').trim().length > 0) filled++;
+    }
+    return filled > 0;
+  });
+
+  // For the AI preview, find rows with at least 2 filled columns (real data rows)
+  const denseRows = rows.filter((row) => {
+    let filled = 0;
+    for (const key of headers) {
+      if (String(row[key] ?? '').trim().length > 0) filled++;
+    }
+    return filled >= 2;
+  });
+
+  // Compact text preview (first 12 dense rows is enough for the AI to understand structure).
+  const sourceRows = denseRows.length > 0 ? denseRows : rows;
+  const sampleSize = Math.min(12, sourceRows.length);
+  const sample = sourceRows.slice(0, sampleSize);
   const preview =
     `Columns: ${headers.join(' | ')}\n` +
     `Has real headers: ${hasHeaders}\n` +
