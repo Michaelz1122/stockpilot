@@ -49,7 +49,10 @@ function toGeminiContents(messages: AIMessage[]): {
       let payload: Record<string, unknown>;
       try {
         const parsed = JSON.parse(m.content);
-        payload = parsed && typeof parsed === 'object' ? parsed : { result: parsed };
+        payload =
+          parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+            ? parsed
+            : { result: parsed };
       } catch {
         payload = { result: m.content };
       }
@@ -149,7 +152,7 @@ export const GeminiProvider: AIProvider = {
           functionResponse: {
             name: call.name,
             response:
-              result && typeof result === 'object'
+              result && typeof result === 'object' && !Array.isArray(result)
                 ? (result as Record<string, unknown>)
                 : { result },
           },
