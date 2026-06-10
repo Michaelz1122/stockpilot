@@ -1,9 +1,9 @@
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Platform, ScrollView, View, type ViewProps } from 'react-native';
+import { Platform, ScrollView, View, type ScrollViewProps } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { cn } from '@/lib/cn';
 
-interface Props extends ViewProps {
+interface Props extends ScrollViewProps {
   scroll?: boolean;
   padded?: boolean;
 }
