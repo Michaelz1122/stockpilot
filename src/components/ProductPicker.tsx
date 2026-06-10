@@ -46,7 +46,7 @@ export function ProductPicker({ visible, products, onClose, onPick, currency }: 
               onChangeText={setQ}
               placeholder={t('common.search')}
               placeholderTextColor="#94a3b8"
-              className="ml-2 flex-1 py-2 text-slate-900 dark:text-slate-100"
+              className="ms-2 flex-1 py-2 text-slate-900 dark:text-slate-100"
             />
           </View>
           <FlatList
@@ -61,7 +61,7 @@ export function ProductPicker({ visible, products, onClose, onPick, currency }: 
                 }}
                 className="mb-1 flex-row items-center justify-between rounded-xl bg-slate-50 px-3 py-3 active:bg-slate-200 dark:bg-slate-800 dark:active:bg-slate-700"
               >
-                <View className="flex-1 pr-3">
+                <View className="flex-1 pe-3">
                   <Text
                     className="text-base font-semibold text-slate-900 dark:text-slate-100"
                     numberOfLines={1}

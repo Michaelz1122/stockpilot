@@ -92,7 +92,7 @@ export function Select<T extends string = string>({
                   onChangeText={setQuery}
                   placeholder={t('common.search')}
                   placeholderTextColor="#94a3b8"
-                  className="ml-2 flex-1 py-2 text-slate-900 dark:text-slate-100"
+                  className="ms-2 flex-1 py-2 text-slate-900 dark:text-slate-100"
                 />
               </View>
             )}

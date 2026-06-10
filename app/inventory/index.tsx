@@ -53,7 +53,7 @@ export default function Inventory() {
           return (
             <Card className="mb-2">
               <View className="flex-row items-center justify-between">
-                <View className="flex-1 pr-2">
+                <View className="flex-1 pe-2">
                   <Text className="font-semibold text-slate-900 dark:text-slate-50">
                     {p?.name ?? t('inventory.unknownProduct')}
                   </Text>

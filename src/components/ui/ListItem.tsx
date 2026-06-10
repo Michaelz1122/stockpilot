@@ -30,7 +30,7 @@ export function ListItem({
         className,
       )}
     >
-      <View className="flex-1 flex-row items-center gap-3 pr-3">
+      <View className="flex-1 flex-row items-center gap-3 pe-3">
         {leadingIcon && (
           <View className="h-10 w-10 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/40">
             <Ionicons name={leadingIcon} size={18} color="#2563eb" />

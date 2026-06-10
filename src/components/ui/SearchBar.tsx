@@ -16,7 +16,7 @@ export function SearchBar({ value, onChangeText, placeholder = 'Search…' }: Pr
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor="#94a3b8"
-        className="ml-2 flex-1 py-3 text-base text-slate-900 dark:text-slate-100"
+        className="ms-2 flex-1 py-3 text-base text-slate-900 dark:text-slate-100"
       />
     </View>
   );

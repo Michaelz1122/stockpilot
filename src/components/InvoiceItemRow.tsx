@@ -36,7 +36,7 @@ export function InvoiceItemRow({
         >
           {product.name}
         </Text>
-        <Pressable onPress={onRemove} className="ml-2 p-1">
+        <Pressable onPress={onRemove} className="ms-2 p-1">
           <Ionicons name="close-circle" size={20} color="#94a3b8" />
         </Pressable>
       </View>

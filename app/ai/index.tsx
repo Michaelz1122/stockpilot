@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Header } from '@/components/ui/Header';
 import { useActiveStore } from '@/hooks/useActiveStore';
@@ -26,6 +26,7 @@ import { pickFileForAI, type PickedFileData } from '@/lib/file-pick';
 export default function AIAssistant() {
   const { storeId, store } = useActiveStore();
   const { t, lang, isRTL } = useLocale();
+  const insets = useSafeAreaInsets();
   const [messages, setMessages] = useState<AIMessage[]>([
     {
       role: 'assistant',
@@ -205,7 +206,7 @@ Critical rules:
         </View>
         {attached && (
           <View className="mx-3 mb-1 flex-row items-center justify-between rounded-xl bg-brand-50 px-3 py-2 dark:bg-brand-900/40">
-            <View className="flex-1 flex-row items-center gap-2 pr-2">
+            <View className="flex-1 flex-row items-center gap-2 pe-2">
               <Ionicons name="document-text" size={16} color="#2563eb" />
               <Text
                 numberOfLines={1}
@@ -221,7 +222,7 @@ Critical rules:
         )}
         <View
           className="flex-row items-center gap-2 border-t border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900"
-          style={{ paddingBottom: Platform.OS === 'ios' ? 20 : 12 }}
+          style={{ paddingBottom: Math.max(insets.bottom, 12) }}
         >
           <Pressable
             onPress={onAttach}
