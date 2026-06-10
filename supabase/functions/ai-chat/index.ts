@@ -101,7 +101,7 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ error: 'Missing "contents"' }, 400);
   }
 
-  const requested = payload.model || 'gemini-1.5-flash-8b';
+  const requested = payload.model || 'gemini-1.5-flash';
   // Build candidate chain — requested first, then fallbacks (skip duplicates).
   const candidates = [
     requested,
