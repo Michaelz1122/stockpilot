@@ -9,6 +9,7 @@ interface Props {
   tone?: 'brand' | 'success' | 'warning' | 'danger';
   onPress?: () => void;
   className?: string;
+  layout?: 'horizontal' | 'vertical';
 }
 
 const TONE_BG: Record<NonNullable<Props['tone']>, string> = {
@@ -31,8 +32,40 @@ export function StatCard({
   tone = 'brand',
   onPress,
   className,
+  layout = 'horizontal',
 }: Props) {
   const Container: any = onPress ? Pressable : View;
+  
+  if (layout === 'vertical') {
+    return (
+      <Container
+        onPress={onPress}
+        className={cn(
+          'flex-1 rounded-2xl bg-white p-3 dark:bg-slate-800 items-start justify-center',
+          'border border-slate-200/60 dark:border-slate-700/60',
+          onPress && 'active:opacity-70',
+          className,
+        )}
+      >
+        <View className={`h-8 w-8 items-center justify-center rounded-lg ${TONE_BG[tone]}`}>
+          <Ionicons name={icon} size={16} color={TONE_FG[tone]} />
+        </View>
+        <Text
+          numberOfLines={1}
+          className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-50"
+        >
+          {value}
+        </Text>
+        <Text
+          numberOfLines={1}
+          className="mt-0.5 text-[10px] text-slate-500"
+        >
+          {label}
+        </Text>
+      </Container>
+    );
+  }
+
   return (
     <Container
       onPress={onPress}

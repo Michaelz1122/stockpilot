@@ -87,20 +87,23 @@ export default function Dashboard() {
               onPress={() => router.push('/reports')}
             />
           </View>
-          <View className="mt-3 flex-row gap-3">
+          <View className="mt-3 flex-row gap-2">
             <StatCard
+              layout="vertical"
               label={t('dashboard.products')}
               value={formatNumber(summary.data.totalProducts)}
               icon="pricetag"
               onPress={() => router.push('/(tabs)/products')}
             />
             <StatCard
+              layout="vertical"
               label={t('dashboard.customers')}
               value={formatNumber(summary.data.totalCustomers)}
               icon="people"
               onPress={() => router.push('/(tabs)/contacts')}
             />
             <StatCard
+              layout="vertical"
               label={t('dashboard.suppliers')}
               value={formatNumber(summary.data.totalSuppliers)}
               icon="business"
