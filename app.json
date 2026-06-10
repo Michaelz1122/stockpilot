@@ -41,6 +41,8 @@
     "extra": {
       "supabaseUrl": "https://umwqlcfctxatfuozbkpp.supabase.co",
       "supabaseAnonKey": "sb_publishable_1_SguOok0pWDikcO_JoOiA_PpPDGt9d",
+      "aiProvider": "gemini",
+      "supportsRTL": true,
       "router": {},
       "eas": {
         "projectId": "03a0f641-f7f7-4241-861f-16a6aed7efe1"
