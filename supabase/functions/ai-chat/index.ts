@@ -10,10 +10,10 @@ const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta';
 // Fallback chain when a model hits rate limits or transient errors.
 // Ordered by daily quota (larger quota first for sustained traffic).
 const FALLBACK_CHAIN = [
-  'gemini-2.5-flash-lite',  // 10 RPM, 250K TPM, 20 RPD
-  'gemini-2.5-flash',        // 5 RPM, 250K TPM, 20 RPD
-  'gemini-2.0-flash',        // backup, older but reliable
-  'gemini-2.0-flash-lite',   // backup-lite
+  'gemini-1.5-flash-8b',     // 15 RPM, highly available free tier
+  'gemini-1.5-flash',        // 15 RPM standard
+  'gemini-2.0-flash',        // fallback
+  'gemini-2.5-flash',        // fallback
 ];
 
 interface RequestBody {
@@ -101,7 +101,7 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ error: 'Missing "contents"' }, 400);
   }
 
-  const requested = payload.model || 'gemini-2.5-flash';
+  const requested = payload.model || 'gemini-1.5-flash-8b';
   // Build candidate chain — requested first, then fallbacks (skip duplicates).
   const candidates = [
     requested,

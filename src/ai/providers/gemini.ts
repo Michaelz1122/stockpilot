@@ -99,7 +99,7 @@ async function callEdge(body: Record<string, unknown>): Promise<any> {
 export const GeminiProvider: AIProvider = {
   name: 'gemini',
   async send(req: AIRequest): Promise<AIResponse> {
-    const model = env.AI_MODEL || 'gemini-2.5-flash';
+    const model = env.AI_MODEL || 'gemini-1.5-flash-8b';
     const tools = req.tools ?? [];
     const toolCallsCollected: NonNullable<AIResponse['toolCalls']> = [];
 
