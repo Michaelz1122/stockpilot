@@ -289,96 +289,6 @@ export function buildTools(
       },
     },
 
-    // ============================================
-    // BULK — for file imports via chat
-    // ============================================
-    {
-      name: 'bulk_add_customers',
-      description:
-        'Add many customers at once. Use this after parsing attached file data. Pass an array of customer objects.',
-      parameters: {
-        type: 'object',
-        properties: {
-          customers: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                name: { type: 'string' },
-                phone: { type: 'string' },
-                address: { type: 'string' },
-                opening_balance: { type: 'number' },
-              },
-              required: ['name'],
-            },
-          },
-        },
-        required: ['customers'],
-      },
-      handler: async (args) => {
-        const list = Array.isArray(args.customers) ? args.customers : [];
-        const n = await CustomersRepo.bulkInsert(storeId, list as any);
-        return { ok: true, added: n };
-      },
-    },
-    {
-      name: 'bulk_add_products',
-      description: 'Add many products at once from attached file data.',
-      parameters: {
-        type: 'object',
-        properties: {
-          products: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                name: { type: 'string' },
-                sku: { type: 'string' },
-                category: { type: 'string' },
-                purchase_price: { type: 'number' },
-                sale_price: { type: 'number' },
-                minimum_stock: { type: 'number' },
-              },
-              required: ['name'],
-            },
-          },
-        },
-        required: ['products'],
-      },
-      handler: async (args) => {
-        const list = Array.isArray(args.products) ? args.products : [];
-        const n = await ProductsRepo.bulkInsert(storeId, list as any);
-        return { ok: true, added: n };
-      },
-    },
-    {
-      name: 'bulk_add_suppliers',
-      description: 'Add many suppliers at once from attached file data.',
-      parameters: {
-        type: 'object',
-        properties: {
-          suppliers: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                name: { type: 'string' },
-                phone: { type: 'string' },
-                address: { type: 'string' },
-                opening_balance: { type: 'number' },
-              },
-              required: ['name'],
-            },
-          },
-        },
-        required: ['suppliers'],
-      },
-      handler: async (args) => {
-        const list = Array.isArray(args.suppliers) ? args.suppliers : [];
-        const n = await SuppliersRepo.bulkInsert(storeId, list as any);
-        return { ok: true, added: n };
-      },
-    },
 
     // ============================================
     // BULK — import the FULL attached file (no row truncation)
@@ -462,8 +372,19 @@ export function buildTools(
 
         const entity = args.entity as 'products' | 'customers' | 'suppliers';
         let added = 0;
+        let skipped = 0;
+        
         if (entity === 'products') {
-          added = await ProductsRepo.bulkInsert(storeId, transformed);
+          const existing = await ProductsRepo.list(storeId);
+          const existingSet = new Set(existing.map((p) => p.name.trim().toLowerCase()));
+          const newItems = transformed.filter((t) => {
+             const key = t.name.trim().toLowerCase();
+             if (existingSet.has(key)) { skipped++; return false; }
+             existingSet.add(key);
+             return true;
+          });
+          added = await ProductsRepo.bulkInsert(storeId, newItems);
+          
           // If the file included an opening stock column, record inventory IN for each
           if (map.opening_stock) {
             // Re-fetch to get IDs by SKU/name (best effort)
@@ -489,15 +410,32 @@ export function buildTools(
             }
           }
         } else if (entity === 'customers') {
-          added = await CustomersRepo.bulkInsert(storeId, transformed);
+          const existing = await CustomersRepo.list(storeId);
+          const existingSet = new Set(existing.map((p) => p.name.trim().toLowerCase()));
+          const newItems = transformed.filter((t) => {
+             const key = t.name.trim().toLowerCase();
+             if (existingSet.has(key)) { skipped++; return false; }
+             existingSet.add(key);
+             return true;
+          });
+          added = await CustomersRepo.bulkInsert(storeId, newItems);
         } else if (entity === 'suppliers') {
-          added = await SuppliersRepo.bulkInsert(storeId, transformed);
+          const existing = await SuppliersRepo.list(storeId);
+          const existingSet = new Set(existing.map((p) => p.name.trim().toLowerCase()));
+          const newItems = transformed.filter((t) => {
+             const key = t.name.trim().toLowerCase();
+             if (existingSet.has(key)) { skipped++; return false; }
+             existingSet.add(key);
+             return true;
+          });
+          added = await SuppliersRepo.bulkInsert(storeId, newItems);
         }
 
         return {
           ok: true,
           entity,
           added,
+          skipped_duplicates: skipped,
           total_rows_in_file: attached.rows.length,
           rows_after_skip: sourceRows.length,
         };

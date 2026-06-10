@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ActivityIndicator,
   Alert,
@@ -40,6 +41,51 @@ export default function AIAssistant() {
   const [selectedModel, setSelectedModel] = useState('gemini-3.1-flash-lite');
   const fileToImportRef = useRef<PickedFileData | null>(null);
   const listRef = useRef<FlatList<AIMessage>>(null);
+
+  useEffect(() => {
+    if (!storeId) return;
+    const load = async () => {
+      try {
+        const saved = await AsyncStorage.getItem(`@ai_history_${storeId}`);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setMessages(parsed);
+            setTimeout(() => listRef.current?.scrollToEnd({ animated: false }), 100);
+          }
+        }
+      } catch (e) {}
+    };
+    load();
+  }, [storeId]);
+
+  useEffect(() => {
+    if (!storeId || messages.length === 0) return;
+    // Don't save if it's just the exact initial greeting
+    if (messages.length === 1 && messages[0].role === 'assistant' && messages[0].content === t('ai.greeting', { store: store?.name ?? '' })) return;
+    AsyncStorage.setItem(`@ai_history_${storeId}`, JSON.stringify(messages)).catch(() => {});
+  }, [messages, storeId]);
+
+  const clearHistory = () => {
+    Alert.alert(
+      lang === 'ar' ? 'مسح المحادثة' : 'Clear Chat',
+      lang === 'ar' ? 'هل أنت متأكد أنك تريد مسح جميع الرسائل؟' : 'Are you sure you want to clear all messages?',
+      [
+        { text: lang === 'ar' ? 'إلغاء' : 'Cancel', style: 'cancel' },
+        { 
+          text: lang === 'ar' ? 'مسح' : 'Clear', 
+          style: 'destructive', 
+          onPress: async () => {
+            const initial = [{ role: 'assistant', content: t('ai.greeting', { store: store?.name ?? '' }) }] as AIMessage[];
+            setMessages(initial);
+            if (storeId) {
+              await AsyncStorage.removeItem(`@ai_history_${storeId}`);
+            }
+          }
+        }
+      ]
+    );
+  };
 
   const SUGGESTIONS = [
     t('ai.suggestions.lowStock'),
@@ -140,9 +186,19 @@ Critical rules:
           : typeof e === 'string'
             ? e
             : JSON.stringify(e);
+            
+      let friendlyError = t('ai.errorPrefix', { message: msg });
+      
+      // Handle Quota / Rate limits
+      if (msg.includes('Quota exceeded') || msg.includes('429') || msg.includes('All models failed')) {
+        friendlyError = lang === 'ar' 
+          ? 'عفواً، لقد استنفدت الحد المجاني للرسائل الخاصة بهذا النموذج اليوم. يرجى اختيار نموذج آخر من القائمة في الأعلى لاستكمال المحادثة.'
+          : 'You have exhausted the free daily limit for this model. Please select a different model from the dropdown above to continue.';
+      }
+      
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: t('ai.errorPrefix', { message: msg }) },
+        { role: 'assistant', content: friendlyError },
       ]);
     } finally {
       setSending(false);
@@ -163,6 +219,11 @@ Critical rules:
             title={t('ai.title')}
             subtitle={t('ai.provider', { name: env.AI_PROVIDER })}
             showBack
+            right={
+              <Pressable onPress={clearHistory} className="h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                <Ionicons name="trash-outline" size={18} color="#ef4444" />
+              </Pressable>
+            }
           />
           <View className="flex-row items-center justify-between py-2 border-b border-slate-200 dark:border-slate-800 mb-2">
             <Text className="text-xs text-slate-500 dark:text-slate-400">النموذج النشط:</Text>
