@@ -1,8 +1,8 @@
-import type { Resolver } from 'react-hook-form';
+import type { Resolver, FieldValues } from 'react-hook-form';
 import type { ZodSchema } from 'zod';
 
 // Tiny zod resolver to avoid adding @hookform/resolvers dependency.
-export function zodResolver<T>(schema: ZodSchema<T>): Resolver<T> {
+export function zodResolver<T extends FieldValues>(schema: ZodSchema<T>): Resolver<T> {
   return async (values) => {
     const result = schema.safeParse(values);
     if (result.success) return { values: result.data, errors: {} };

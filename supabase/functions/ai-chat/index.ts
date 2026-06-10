@@ -1,3 +1,4 @@
+// @ts-nocheck
 // StockPilot AI — secure Gemini proxy with silent model rotation.
 // Deployed to Supabase Edge Functions (Deno runtime).
 // JWT verification is ON, so only signed-in users reach this code.

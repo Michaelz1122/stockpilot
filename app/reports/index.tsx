@@ -13,13 +13,13 @@ import { cn } from '@/lib/cn';
 import { formatMoney, formatNumber } from '@/lib/format';
 
 type Period = 'day' | 'week' | 'month' | 'year';
-type View = 'overview' | 'low' | 'topCustomers' | 'outstanding';
+type ReportView = 'overview' | 'low' | 'topCustomers' | 'outstanding';
 
 export default function Reports() {
   const router = useRouter();
   const { t } = useLocale();
   const { storeId, store } = useActiveStore();
-  const [view, setView] = useState<View>('overview');
+  const [view, setView] = useState<ReportView>('overview');
   const [period, setPeriod] = useState<Period>('day');
 
   const dashboard = useAsync(
@@ -57,7 +57,7 @@ export default function Reports() {
     [storeId, period, view],
   );
 
-  const viewLabel: Record<View, string> = {
+  const viewLabel: Record<ReportView, string> = {
     overview: t('reports.overview'),
     low: t('reports.lowStock'),
     topCustomers: t('reports.topCustomers'),
@@ -68,7 +68,7 @@ export default function Reports() {
     <Screen padded>
       <Header title={t('reports.title')} subtitle={t('reports.subtitle')} showBack />
       <View className="mb-3 flex-row gap-2">
-        {(['overview', 'low', 'topCustomers', 'outstanding'] as View[]).map((v) => (
+        {(['overview', 'low', 'topCustomers', 'outstanding'] as ReportView[]).map((v) => (
           <Pressable
             key={v}
             onPress={() => setView(v)}

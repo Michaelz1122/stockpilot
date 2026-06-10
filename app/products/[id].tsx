@@ -25,7 +25,7 @@ export default function ProductDetail() {
     [storeId, id],
   );
   const stocks = useAsync(
-    () => (storeId ? InventoryRepo.stockByProduct(storeId) : Promise.resolve({})),
+    () => (storeId ? InventoryRepo.stockByProduct(storeId) : Promise.resolve({} as Record<string, number>)),
     [storeId, txs.data?.length ?? 0],
   );
 
