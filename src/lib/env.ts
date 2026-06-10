@@ -11,7 +11,7 @@ export const env = {
     process.env.EXPO_PUBLIC_AI_PROVIDER ?? extra.aiProvider ?? 'local',
   AI_API_KEY: process.env.EXPO_PUBLIC_AI_API_KEY ?? extra.aiApiKey ?? '',
   AI_MODEL:
-    process.env.EXPO_PUBLIC_AI_MODEL ?? extra.aiModel ?? 'gemini-2.5-flash',
+    process.env.EXPO_PUBLIC_AI_MODEL ?? extra.aiModel ?? 'gemini-3.1-flash-lite',
 };
 
 export const isSupabaseConfigured = () =>

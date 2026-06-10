@@ -23,6 +23,7 @@ export interface AIRequest {
   messages: AIMessage[];
   tools?: AIToolDefinition[];
   context: AIContext;
+  model?: string;
 }
 
 export interface AIResponse {

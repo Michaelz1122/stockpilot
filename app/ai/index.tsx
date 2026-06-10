@@ -37,6 +37,7 @@ export default function AIAssistant() {
   const [sending, setSending] = useState(false);
   const [pickingFile, setPickingFile] = useState(false);
   const [attached, setAttached] = useState<PickedFileData | null>(null);
+  const [selectedModel, setSelectedModel] = useState('gemini-3.1-flash-lite');
   const fileToImportRef = useRef<PickedFileData | null>(null);
   const listRef = useRef<FlatList<AIMessage>>(null);
 
@@ -123,6 +124,7 @@ Critical rules:
         messages: [{ role: 'system', content: systemPrompt }, ...next],
         tools,
         context: { storeId, lang },
+        model: selectedModel,
       });
       let replyContent = res.reply;
       if (!replyContent && res.toolCalls && res.toolCalls.length > 0) {
@@ -162,6 +164,22 @@ Critical rules:
             subtitle={t('ai.provider', { name: env.AI_PROVIDER })}
             showBack
           />
+          <View className="flex-row items-center justify-between py-2 border-b border-slate-200 dark:border-slate-800 mb-2">
+            <Text className="text-xs text-slate-500 dark:text-slate-400">النموذج النشط:</Text>
+            <View className="flex-row gap-2">
+              {['gemini-3.1-flash-lite', 'gemini-3.5-flash', 'gemini-2.5-flash'].map((m) => (
+                <Pressable
+                  key={m}
+                  onPress={() => setSelectedModel(m)}
+                  className={`px-2 py-1 rounded-md ${selectedModel === m ? 'bg-brand-100 dark:bg-brand-900/50' : 'bg-slate-100 dark:bg-slate-800'}`}
+                >
+                  <Text className={`text-[10px] ${selectedModel === m ? 'text-brand-700 dark:text-brand-300 font-bold' : 'text-slate-600 dark:text-slate-400'}`}>
+                    {m.replace('gemini-', '')}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
         </View>
         <FlatList
           ref={listRef}

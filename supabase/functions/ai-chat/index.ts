@@ -10,10 +10,11 @@ const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta';
 // Fallback chain when a model hits rate limits or transient errors.
 // Ordered by daily quota (larger quota first for sustained traffic).
 const FALLBACK_CHAIN = [
-  'gemini-2.5-flash-lite',
-  'gemini-2.5-flash',
-  'gemini-2.0-flash',
-  'gemini-2.0-flash-lite',
+  'gemini-3.1-flash-lite',   // 500 RPD
+  'gemini-3.5-flash',        // 20 RPD
+  'gemini-3-flash',          // 20 RPD
+  'gemini-2.5-flash',        // 20 RPD
+  'gemini-2.5-flash-lite',   // 20 RPD
 ];
 
 interface RequestBody {
