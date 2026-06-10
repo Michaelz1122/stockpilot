@@ -30,11 +30,10 @@ export function buildTools(
     {
       name: 'find_product',
       description:
-        'Search products in the active store by name (Arabic or English), sku, or barcode. Returns matching products with current stock.',
+        'Search products in the active store by name (Arabic or English), sku, or barcode. If no query is provided, returns a general list of products.',
       parameters: {
         type: 'object',
         properties: { query: { type: 'string' } },
-        required: ['query'],
       },
       handler: async (args) => {
         const q = String(args.query ?? '');
@@ -43,40 +42,38 @@ export function buildTools(
           .filter((p) =>
             matchesAny([p.name, p.sku, p.barcode, p.category, p.description], q),
           )
-          .slice(0, 10);
+          .slice(0, 20); // Return up to 20 when listing
       },
     },
     {
       name: 'find_customer',
       description:
-        'Find a customer by name or phone (Arabic or English). Returns customer with current balance.',
+        'Find a customer by name or phone (Arabic or English). If no query is provided, returns a list of all customers.',
       parameters: {
         type: 'object',
         properties: { query: { type: 'string' } },
-        required: ['query'],
       },
       handler: async (args) => {
         const q = String(args.query ?? '');
         const customers = await CustomersRepo.list(storeId);
         return customers
           .filter((c) => matchesAny([c.name, c.phone, c.address], q))
-          .slice(0, 10);
+          .slice(0, 20);
       },
     },
     {
       name: 'find_supplier',
-      description: 'Find a supplier by name or phone (Arabic or English).',
+      description: 'Find a supplier by name or phone (Arabic or English). If no query is provided, returns a list of all suppliers.',
       parameters: {
         type: 'object',
         properties: { query: { type: 'string' } },
-        required: ['query'],
       },
       handler: async (args) => {
         const q = String(args.query ?? '');
         const suppliers = await SuppliersRepo.list(storeId);
         return suppliers
           .filter((s) => matchesAny([s.name, s.phone, s.address], q))
-          .slice(0, 10);
+          .slice(0, 20);
       },
     },
     {
