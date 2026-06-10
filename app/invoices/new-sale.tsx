@@ -106,7 +106,6 @@ export default function NewSale() {
             discount: Number(i.discount || 0),
           })),
         },
-        products.data ?? [],
       );
       router.replace(`/invoices/sale/${inv.id}`);
     } catch (e: any) {

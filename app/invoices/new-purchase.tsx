@@ -97,7 +97,6 @@ export default function NewPurchase() {
             discount: Number(i.discount || 0),
           })),
         },
-        products.data ?? [],
       );
       router.replace(`/invoices/purchase/${inv.id}`);
     } catch (e: any) {
