@@ -37,6 +37,7 @@ export default function AIAssistant() {
   const [sending, setSending] = useState(false);
   const [pickingFile, setPickingFile] = useState(false);
   const [attached, setAttached] = useState<PickedFileData | null>(null);
+  const fileToImportRef = useRef<PickedFileData | null>(null);
   const listRef = useRef<FlatList<AIMessage>>(null);
 
   const SUGGESTIONS = [
@@ -70,6 +71,7 @@ export default function AIAssistant() {
     // Compose message: user prompt + file content if any.
     let msgContent = userText;
     if (file) {
+      fileToImportRef.current = file;
       const fileHeader = `[ATTACHED FILE: ${file.name}, ${file.totalRows} rows]\n${file.preview}\n[END OF FILE]\n\n`;
       msgContent = userText ? `${fileHeader}${userText}` : fileHeader.trim();
     }
@@ -81,15 +83,16 @@ export default function AIAssistant() {
     try {
       const provider = getAIProvider();
       // Pass the full attached file to tools so AI can import EVERY row, not just the preview.
+      const persistedFile = fileToImportRef.current;
       const tools = buildTools(storeId, {
         lang,
         t: (k, p) => i18n.t(k, p) as string,
-        attachedFile: file
+        attachedFile: persistedFile
           ? {
-              name: file.name,
-              hasHeaders: file.hasHeaders,
-              headers: file.headers,
-              rows: file.rows,
+              name: persistedFile.name,
+              hasHeaders: persistedFile.hasHeaders,
+              headers: persistedFile.headers,
+              rows: persistedFile.rows,
             }
           : null,
       });
@@ -121,7 +124,13 @@ Critical rules:
         tools,
         context: { storeId, lang },
       });
-      setMessages((prev) => [...prev, { role: 'assistant', content: res.reply }]);
+      let replyContent = res.reply;
+      if (!replyContent && res.toolCalls && res.toolCalls.length > 0) {
+        replyContent = lang === 'ar' ? 'تمت العملية بنجاح.' : 'Operation completed successfully.';
+      }
+      if (replyContent) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: replyContent }]);
+      }
     } catch (e: any) {
       const msg =
         typeof e?.message === 'string'
