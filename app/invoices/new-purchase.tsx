@@ -93,6 +93,7 @@ export default function NewPurchase() {
           items: items.map((i) => ({
             product_id: i.product.id,
             quantity: Number(i.quantity),
+            unit_price: i.product.sale_price,
             unit_cost: Number(i.unit_price),
             discount: Number(i.discount || 0),
           })),
