@@ -7,7 +7,7 @@ import { useAppStores } from '@/state/store-context';
 export default function Index() {
   const router = useRouter();
   const { ready, user } = useAuth();
-  const { stores, activeStoreId } = useAppStores();
+  const { stores, activeStoreId, initialized } = useAppStores();
 
   useEffect(() => {
     if (!ready) return;
@@ -15,13 +15,15 @@ export default function Index() {
       router.replace('/auth/sign-in');
       return;
     }
+    if (!initialized) return;
+
     if (stores.length === 0) {
       router.replace('/stores/new');
       return;
     }
     if (!activeStoreId) return;
     router.replace('/(tabs)/dashboard');
-  }, [ready, user, stores.length, activeStoreId]);
+  }, [ready, user, initialized, stores.length, activeStoreId]);
 
   return (
     <View className="flex-1 items-center justify-center bg-slate-50">
