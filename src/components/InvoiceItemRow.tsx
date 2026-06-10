@@ -2,6 +2,7 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { Product } from '@/lib/types';
 import { formatMoney } from '@/lib/format';
+import { useLocale } from '@/hooks/useLocale';
 
 interface Props {
   product: Product;
@@ -22,6 +23,7 @@ export function InvoiceItemRow({
   onRemove,
   currency,
 }: Props) {
+  const { t } = useLocale();
   const qty = Number(quantity || 0);
   const price = Number(unit_price || 0);
   const disc = Number(discount || 0);
@@ -42,28 +44,28 @@ export function InvoiceItemRow({
       </View>
       <View className="mt-2 flex-row gap-2">
         <View className="flex-1">
-          <Text className="mb-1 text-[10px] uppercase text-slate-500">Qty</Text>
+          <Text className="mb-1 text-[10px] uppercase text-slate-500">{t('invoice.quantity')}</Text>
           <TextInput
             value={quantity}
-            onChangeText={(t) => onChange({ quantity: t })}
+            onChangeText={(txt) => onChange({ quantity: txt })}
             keyboardType="decimal-pad"
             className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           />
         </View>
         <View className="flex-1">
-          <Text className="mb-1 text-[10px] uppercase text-slate-500">Price</Text>
+          <Text className="mb-1 text-[10px] uppercase text-slate-500">{t('invoice.unitPrice')}</Text>
           <TextInput
             value={unit_price}
-            onChangeText={(t) => onChange({ unit_price: t })}
+            onChangeText={(txt) => onChange({ unit_price: txt })}
             keyboardType="decimal-pad"
             className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           />
         </View>
         <View className="flex-1">
-          <Text className="mb-1 text-[10px] uppercase text-slate-500">Disc</Text>
+          <Text className="mb-1 text-[10px] uppercase text-slate-500">{t('invoices.discount')}</Text>
           <TextInput
             value={discount}
-            onChangeText={(t) => onChange({ discount: t })}
+            onChangeText={(txt) => onChange({ discount: txt })}
             keyboardType="decimal-pad"
             className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           />
