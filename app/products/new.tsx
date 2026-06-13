@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { Screen } from '@/components/ui/Screen';
@@ -14,10 +14,10 @@ import { zodResolver } from '@/lib/zod-resolver';
 
 export default function NewProduct() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const { storeId } = useActiveStore();
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit, formState: { errors } } = useForm<ProductInput>({
+  const { control, handleSubmit, reset, formState: { errors } } = useForm<ProductInput>({
     defaultValues: {
       name: '',
       sku: '',
@@ -36,7 +36,11 @@ export default function NewProduct() {
     setLoading(true);
     try {
       await ProductsRepo.create(storeId, data as any);
-      router.back();
+      Alert.alert(
+        lang === 'ar' ? 'تمت الإضافة' : 'Success',
+        lang === 'ar' ? 'تم إضافة الصنف بنجاح!' : 'Product added successfully!',
+      );
+      reset();
     } catch (e: any) {
       Alert.alert(t('common.error'), e?.message ?? t('invoices.couldNotSave'));
     } finally {
@@ -47,6 +51,7 @@ export default function NewProduct() {
   return (
     <Screen scroll>
       <Header title={t('products.newTitle')} showBack />
+      
       <Controller
         control={control}
         name="name"
@@ -59,72 +64,92 @@ export default function NewProduct() {
           />
         )}
       />
-      <Controller
-        control={control}
-        name="sku"
-        render={({ field }) => (
-          <Input label={t('products.sku')} value={(field.value as string) ?? ''} onChangeText={field.onChange} />
-        )}
-      />
-      <Controller
-        control={control}
-        name="barcode"
-        render={({ field }) => (
-          <Input
-            label={t('products.barcode')}
-            value={(field.value as string) ?? ''}
-            onChangeText={field.onChange}
-            keyboardType="number-pad"
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="category"
-        render={({ field }) => (
-          <Input
-            label={t('products.category')}
-            value={(field.value as string) ?? ''}
-            onChangeText={field.onChange}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="purchase_price"
-        render={({ field }) => (
-          <Input
-            label={t('products.purchasePrice')}
-            keyboardType="decimal-pad"
-            value={String(field.value ?? '')}
-            onChangeText={(tx) => field.onChange(tx)}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="sale_price"
-        render={({ field }) => (
-          <Input
-            label={t('products.salePrice')}
-            keyboardType="decimal-pad"
-            value={String(field.value ?? '')}
-            onChangeText={(tx) => field.onChange(tx)}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="minimum_stock"
-        render={({ field }) => (
-          <Input
-            label={t('products.minimumStock')}
-            keyboardType="decimal-pad"
-            value={String(field.value ?? '')}
-            onChangeText={(tx) => field.onChange(tx)}
-          />
-        )}
-      />
+
+      <View className="flex-row gap-3">
+        <Controller
+          control={control}
+          name="sku"
+          render={({ field }) => (
+            <Input 
+              containerClassName="flex-1"
+              label={t('products.sku')} 
+              value={(field.value as string) ?? ''} 
+              onChangeText={field.onChange} 
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="barcode"
+          render={({ field }) => (
+            <Input
+              containerClassName="flex-1"
+              label={t('products.barcode')}
+              value={(field.value as string) ?? ''}
+              onChangeText={field.onChange}
+              keyboardType="number-pad"
+            />
+          )}
+        />
+      </View>
+
+      <View className="flex-row gap-3">
+        <Controller
+          control={control}
+          name="category"
+          render={({ field }) => (
+            <Input
+              containerClassName="flex-1"
+              label={t('products.category')}
+              value={(field.value as string) ?? ''}
+              onChangeText={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="minimum_stock"
+          render={({ field }) => (
+            <Input
+              containerClassName="flex-1"
+              label={t('products.minimumStock')}
+              keyboardType="decimal-pad"
+              value={String(field.value ?? '')}
+              onChangeText={(tx) => field.onChange(tx)}
+            />
+          )}
+        />
+      </View>
+
+      <View className="flex-row gap-3">
+        <Controller
+          control={control}
+          name="purchase_price"
+          render={({ field }) => (
+            <Input
+              containerClassName="flex-1"
+              label={t('products.purchasePrice')}
+              keyboardType="decimal-pad"
+              value={String(field.value ?? '')}
+              onChangeText={(tx) => field.onChange(tx)}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="sale_price"
+          render={({ field }) => (
+            <Input
+              containerClassName="flex-1"
+              label={t('products.salePrice')}
+              keyboardType="decimal-pad"
+              value={String(field.value ?? '')}
+              onChangeText={(tx) => field.onChange(tx)}
+            />
+          )}
+        />
+      </View>
+
       <Controller
         control={control}
         name="description"
