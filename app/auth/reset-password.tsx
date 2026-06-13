@@ -12,23 +12,31 @@ import { useLocale } from '@/hooks/useLocale';
 export default function ResetPassword() {
   const router = useRouter();
   const { t, lang } = useLocale();
-  const params = useLocalSearchParams<{ email?: string; access_token?: string; refresh_token?: string; recovery?: string }>();
+  const params = useLocalSearchParams<{ email?: string; recovery?: string }>();
+  const url = Linking.useURL();
 
-  const [step, setStep] = useState<1 | 2>((params.access_token || params.recovery) ? 2 : 1);
+  const [step, setStep] = useState<1 | 2>(params.recovery ? 2 : 1);
   const [email, setEmail] = useState(params.email ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // If the app was opened via the email link, we extract the tokens and set the session
-    if (params.access_token && params.refresh_token) {
-      setStep(2);
-      getSupabase().auth.setSession({
-        access_token: params.access_token,
-        refresh_token: params.refresh_token,
-      });
+    if (!url) return;
+    if (url.includes('#access_token=')) {
+      const hash = url.split('#')[1];
+      if (hash) {
+        const parts = hash.split('&');
+        const hashParams = Object.fromEntries(parts.map(p => p.split('=')));
+        if (hashParams.access_token && hashParams.refresh_token) {
+          setStep(2);
+          getSupabase().auth.setSession({
+            access_token: hashParams.access_token,
+            refresh_token: hashParams.refresh_token,
+          });
+        }
+      }
     }
-  }, [params.access_token, params.refresh_token]);
+  }, [url]);
 
   const handleSendLink = async () => {
     if (!email.trim()) return;
