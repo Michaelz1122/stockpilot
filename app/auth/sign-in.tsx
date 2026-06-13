@@ -59,7 +59,7 @@ export default function SignIn() {
           onChangeText={setPassword}
         />
         {!isSignUp && (
-          <Pressable onPress={() => router.push({ pathname: '/auth/reset-password', params: { email } })} className="mb-4 items-end">
+          <Pressable onPress={() => router.push({ pathname: '/auth/reset-password' as any, params: { email } })} className="mb-4 items-end">
             <Text className="text-sm text-brand-600 dark:text-brand-400">
               {lang === 'ar' ? 'نسيت كلمة المرور؟' : 'Forgot Password?'}
             </Text>
