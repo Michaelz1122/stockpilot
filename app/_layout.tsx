@@ -10,7 +10,7 @@ import { StoresRepo } from '@/repositories/stores.repo';
 import { initI18n } from '@/i18n';
 
 export default function RootLayout() {
-  const { ready, user, init } = useAuth();
+  const { ready, user, init, recoveryEvent, clearRecovery } = useAuth();
   const segments = useSegments();
   const router = useRouter();
   const { setStores, hydrate } = useAppStores();
@@ -26,6 +26,13 @@ export default function RootLayout() {
     init();
     hydrate();
   }, []);
+
+  useEffect(() => {
+    if (recoveryEvent) {
+      clearRecovery();
+      router.replace('/auth/reset-password?recovery=true' as any);
+    }
+  }, [recoveryEvent]);
 
   useEffect(() => {
     if (!i18nReady) return;

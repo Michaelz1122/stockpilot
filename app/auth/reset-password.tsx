@@ -12,9 +12,9 @@ import { useLocale } from '@/hooks/useLocale';
 export default function ResetPassword() {
   const router = useRouter();
   const { t, lang } = useLocale();
-  const params = useLocalSearchParams<{ email?: string; access_token?: string; refresh_token?: string }>();
+  const params = useLocalSearchParams<{ email?: string; access_token?: string; refresh_token?: string; recovery?: string }>();
 
-  const [step, setStep] = useState<1 | 2>(params.access_token ? 2 : 1);
+  const [step, setStep] = useState<1 | 2>((params.access_token || params.recovery) ? 2 : 1);
   const [email, setEmail] = useState(params.email ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);

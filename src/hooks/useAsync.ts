@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
 
 export interface AsyncState<T> {
   data: T | null;
@@ -32,14 +33,16 @@ export function useAsync<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    mounted.current = true;
-    refresh();
-    return () => {
-      mounted.current = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  useFocusEffect(
+    useCallback(() => {
+      mounted.current = true;
+      refresh();
+      return () => {
+        mounted.current = false;
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps)
+  );
 
   return { data, loading, error, refresh };
 }

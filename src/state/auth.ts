@@ -10,12 +10,16 @@ interface AuthState {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  recoveryEvent: boolean;
+  clearRecovery: () => void;
 }
 
 export const useAuth = create<AuthState>((set) => ({
   user: null,
   session: null,
   ready: false,
+  recoveryEvent: false,
+  clearRecovery: () => set({ recoveryEvent: false }),
   init: async () => {
     const sb = getSupabase();
     const { data } = await sb.auth.getSession();
@@ -24,8 +28,11 @@ export const useAuth = create<AuthState>((set) => ({
       user: data.session?.user ?? null,
       ready: true,
     });
-    sb.auth.onAuthStateChange((_event, session) => {
+    sb.auth.onAuthStateChange((event, session) => {
       set({ session, user: session?.user ?? null });
+      if (event === 'PASSWORD_RECOVERY') {
+        set({ recoveryEvent: true });
+      }
     });
   },
   signIn: async (email, password) => {
