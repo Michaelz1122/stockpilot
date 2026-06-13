@@ -22,7 +22,9 @@ export default function CustomerDetail() {
     async () => {
       if (!storeId) return [];
       const list = await SalesRepo.list(storeId);
-      return list.filter((s) => s.customer_id === id);
+      return list
+        .filter((s) => s.customer_id === id)
+        .sort((a, b) => new Date(b.invoice_date).getTime() - new Date(a.invoice_date).getTime());
     },
     [storeId, id],
   );

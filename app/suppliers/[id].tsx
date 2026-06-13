@@ -22,7 +22,9 @@ export default function SupplierDetail() {
     async () => {
       if (!storeId) return [];
       const list = await PurchasesRepo.list(storeId);
-      return list.filter((p) => p.supplier_id === id);
+      return list
+        .filter((p) => p.supplier_id === id)
+        .sort((a, b) => new Date(b.invoice_date).getTime() - new Date(a.invoice_date).getTime());
     },
     [storeId, id],
   );
