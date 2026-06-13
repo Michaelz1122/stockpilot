@@ -20,13 +20,13 @@
     "android": {
       "package": "com.stockpilot.ai",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/playstore-icon.png",
         "backgroundColor": "#0F172A"
       }
     },
     "web": {
       "bundler": "metro",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/ic_launcher-web.png"
     },
     "plugins": [
       "expo-router",
