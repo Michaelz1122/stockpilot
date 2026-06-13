@@ -14,7 +14,7 @@ export interface Payment {
 
 export const PaymentsRepo = {
   async list(storeId: string): Promise<Payment[]> {
-    const { data, error } = await getSupabase()
+    const { data, error } = await (getSupabase() as any)
       .from('payments')
       .select('*')
       .eq('store_id', storeId)
@@ -24,7 +24,7 @@ export const PaymentsRepo = {
   },
 
   async get(id: string): Promise<Payment> {
-    const { data, error } = await getSupabase()
+    const { data, error } = await (getSupabase() as any)
       .from('payments')
       .select('*')
       .eq('id', id)
@@ -34,7 +34,7 @@ export const PaymentsRepo = {
   },
 
   async create(payload: Partial<Payment>): Promise<Payment> {
-    const { data, error } = await getSupabase()
+    const { data, error } = await (getSupabase() as any)
       .from('payments')
       .insert(payload)
       .select()
@@ -44,7 +44,7 @@ export const PaymentsRepo = {
   },
 
   async remove(id: string): Promise<void> {
-    const { error } = await getSupabase().from('payments').delete().eq('id', id);
+    const { error } = await (getSupabase() as any).from('payments').delete().eq('id', id);
     if (error) throw error;
   },
 };

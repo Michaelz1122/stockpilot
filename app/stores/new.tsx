@@ -14,7 +14,7 @@ import { useLocale } from '@/hooks/useLocale';
 
 export default function NewStore() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const { setStores, setActiveStore } = useAppStores();
   const [loading, setLoading] = useState(false);
   const {
