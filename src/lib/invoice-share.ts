@@ -69,3 +69,38 @@ export async function shareInvoiceAsText(args: {
     await Sharing.shareAsync(uri, { mimeType: 'text/plain', dialogTitle: fileName });
   }
 }
+
+export async function sharePaymentAsText(args: {
+  storeName: string;
+  storeCurrency: string;
+  payment: { id: string; amount: number; payment_date: string; notes?: string | null };
+  partyLabel: string;
+  partyName: string;
+  receiptLabel: string;
+}): Promise<void> {
+  const { storeName, storeCurrency, payment, partyLabel, partyName, receiptLabel } = args;
+  const sep = '────────────────────────────';
+  const lines: string[] = [];
+  lines.push(storeName);
+  lines.push(sep);
+  lines.push(`${receiptLabel} #${payment.id.slice(0, 8)}`);
+  lines.push(formatDate(payment.payment_date));
+  lines.push(`${partyLabel}: ${partyName}`);
+  lines.push(sep);
+  lines.push(`Amount:   ${formatMoney(payment.amount, storeCurrency)}`);
+  if (payment.notes) {
+    lines.push(sep);
+    lines.push(payment.notes);
+  }
+  lines.push(sep);
+
+  const body = lines.join('\n');
+  const fileName = `receipt-${payment.id.slice(0, 8)}.txt`;
+  const uri = FileSystem.cacheDirectory + fileName;
+  await FileSystem.writeAsStringAsync(uri, body, {
+    encoding: FileSystem.EncodingType.UTF8,
+  });
+  if (await Sharing.isAvailableAsync()) {
+    await Sharing.shareAsync(uri, { mimeType: 'text/plain', dialogTitle: fileName });
+  }
+}

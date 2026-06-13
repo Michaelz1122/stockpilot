@@ -31,6 +31,7 @@ export default function NewStore() {
     { label: t('store.types.grocery'), value: 'grocery' },
     { label: t('store.types.pharmacy'), value: 'pharmacy' },
     { label: t('store.types.general'), value: 'general' },
+    { label: lang === 'ar' ? 'مخزن' : 'Warehouse', value: 'warehouse' },
   ];
 
   const submit = async (data: StoreInput) => {
