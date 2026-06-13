@@ -10,7 +10,7 @@ import { useLocale } from '@/hooks/useLocale';
 
 export default function SignIn() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const { signIn, signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -54,10 +54,17 @@ export default function SignIn() {
         <Input
           label={t('auth.password')}
           placeholder="••••••••"
-          secureTextEntry
+          isPassword
           value={password}
           onChangeText={setPassword}
         />
+        {!isSignUp && (
+          <Pressable onPress={() => router.push({ pathname: '/auth/reset-password', params: { email } })} className="mb-4 items-end">
+            <Text className="text-sm text-brand-600 dark:text-brand-400">
+              {lang === 'ar' ? 'نسيت كلمة المرور؟' : 'Forgot Password?'}
+            </Text>
+          </Pressable>
+        )}
         <Button
           title={isSignUp ? t('auth.signUp') : t('auth.signIn')}
           loading={loading}
