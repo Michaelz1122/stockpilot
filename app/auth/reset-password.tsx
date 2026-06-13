@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
 import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
 import { Input } from '@/components/ui/Input';
@@ -12,39 +12,43 @@ import { useLocale } from '@/hooks/useLocale';
 export default function ResetPassword() {
   const router = useRouter();
   const { t, lang } = useLocale();
-  const params = useLocalSearchParams<{ email?: string }>();
+  const params = useLocalSearchParams<{ email?: string; access_token?: string; refresh_token?: string }>();
 
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2>(params.access_token ? 2 : 1);
   const [email, setEmail] = useState(params.email ?? '');
-  const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSendOtp = async () => {
+  useEffect(() => {
+    // If the app was opened via the email link, we extract the tokens and set the session
+    if (params.access_token && params.refresh_token) {
+      setStep(2);
+      getSupabase().auth.setSession({
+        access_token: params.access_token,
+        refresh_token: params.refresh_token,
+      });
+    }
+  }, [params.access_token, params.refresh_token]);
+
+  const handleSendLink = async () => {
     if (!email.trim()) return;
     setLoading(true);
     try {
-      const { error } = await getSupabase().auth.resetPasswordForEmail(email.trim());
-      if (error) throw error;
-      setStep(2);
-    } catch (e: any) {
-      Alert.alert(lang === 'ar' ? 'خطأ' : 'Error', e?.message ?? '');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    if (!otp.trim()) return;
-    setLoading(true);
-    try {
-      const { error } = await getSupabase().auth.verifyOtp({
-        email: email.trim(),
-        token: otp.trim(),
-        type: 'recovery',
+      // Use expo-linking to construct the correct deep link URL for this screen
+      const resetUrl = Linking.createURL('/auth/reset-password');
+      
+      const { error } = await getSupabase().auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: resetUrl,
       });
       if (error) throw error;
-      setStep(3);
+      
+      Alert.alert(
+        lang === 'ar' ? 'تم الإرسال' : 'Sent',
+        lang === 'ar' 
+          ? 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. الرجاء التحقق من صندوق الوارد واضغط على الرابط.' 
+          : 'A password reset link has been sent to your email. Please check your inbox and click the link.',
+        [{ text: 'OK', onPress: () => router.back() }]
+      );
     } catch (e: any) {
       Alert.alert(lang === 'ar' ? 'خطأ' : 'Error', e?.message ?? '');
     } finally {
@@ -79,15 +83,15 @@ export default function ResetPassword() {
 
   return (
     <Screen scroll>
-      <Header title={lang === 'ar' ? 'نسيت كلمة المرور' : 'Forgot Password'} showBack />
+      <Header title={lang === 'ar' ? 'استعادة كلمة المرور' : 'Reset Password'} showBack />
       
       <View className="mt-4">
         {step === 1 && (
           <>
             <Text className="mb-4 text-slate-500 dark:text-slate-400">
               {lang === 'ar' 
-                ? 'أدخل بريدك الإلكتروني وسنرسل لك رمزاً مكوناً من 6 أرقام لإعادة تعيين كلمة المرور.'
-                : 'Enter your email and we will send you a 6-digit code to reset your password.'}
+                ? 'أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور الخاصة بك.'
+                : 'Enter your email and we will send you a link to reset your password.'}
             </Text>
             <Input
               label={t('auth.email')}
@@ -98,9 +102,9 @@ export default function ResetPassword() {
               onChangeText={setEmail}
             />
             <Button
-              title={lang === 'ar' ? 'إرسال الرمز' : 'Send Code'}
+              title={lang === 'ar' ? 'إرسال الرابط' : 'Send Link'}
               loading={loading}
-              onPress={handleSendOtp}
+              onPress={handleSendLink}
             />
           </>
         )}
@@ -109,37 +113,8 @@ export default function ResetPassword() {
           <>
             <Text className="mb-4 text-slate-500 dark:text-slate-400">
               {lang === 'ar' 
-                ? `لقد أرسلنا رمزاً إلى ${email}. الرجاء إدخاله أدناه.`
-                : `We sent a code to ${email}. Please enter it below.`}
-            </Text>
-            <Input
-              label={lang === 'ar' ? 'رمز التحقق (OTP)' : 'Verification Code (OTP)'}
-              placeholder="123456"
-              keyboardType="number-pad"
-              value={otp}
-              onChangeText={setOtp}
-            />
-            <Button
-              title={lang === 'ar' ? 'تحقق' : 'Verify'}
-              loading={loading}
-              onPress={handleVerifyOtp}
-            />
-            <Button
-              title={lang === 'ar' ? 'تعديل الإيميل' : 'Change Email'}
-              variant="outline"
-              className="mt-3"
-              onPress={() => setStep(1)}
-              disabled={loading}
-            />
-          </>
-        )}
-
-        {step === 3 && (
-          <>
-            <Text className="mb-4 text-slate-500 dark:text-slate-400">
-              {lang === 'ar' 
-                ? 'تم التحقق بنجاح! أدخل كلمة المرور الجديدة الخاصة بك الآن.'
-                : 'Verified successfully! Enter your new password now.'}
+                ? 'الرجاء إدخال كلمة المرور الجديدة.'
+                : 'Please enter your new password.'}
             </Text>
             <Input
               label={lang === 'ar' ? 'كلمة المرور الجديدة' : 'New Password'}
