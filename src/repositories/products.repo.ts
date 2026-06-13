@@ -70,8 +70,8 @@ export const ProductsRepo = {
   },
 
   async update(id: string, patch: Partial<Product>): Promise<Product> {
-    // strip computed columns
-    const { current_stock: _cs, search_blob: _sb, ...rest } = patch as any;
+    // strip computed columns and opening_stock (since it's not a table column)
+    const { current_stock: _cs, search_blob: _sb, opening_stock: _os, ...rest } = patch as any;
     const { data, error } = await sb()
       .from('products')
       .update(rest)
