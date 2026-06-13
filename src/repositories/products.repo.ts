@@ -34,7 +34,7 @@ export const ProductsRepo = {
     return (data ?? null) as Product | null;
   },
 
-  async create(storeId: string, input: Partial<Product>): Promise<Product> {
+  async create(storeId: string, input: Partial<Product> & { opening_stock?: number }): Promise<Product> {
     const { data, error } = await sb()
       .from('products')
       .insert({
@@ -51,6 +51,21 @@ export const ProductsRepo = {
       .select()
       .single();
     if (error) throw error;
+
+    if (input.opening_stock && input.opening_stock > 0) {
+      const { error: invErr } = await sb()
+        .from('inventory_transactions')
+        .insert({
+          store_id: storeId,
+          product_id: data.id,
+          type: 'IN',
+          quantity: Number(input.opening_stock),
+          unit_cost: Number(input.purchase_price ?? 0),
+          note: 'رصيد افتتاحي (Opening Balance)',
+        });
+      if (invErr) throw invErr;
+    }
+
     return data as Product;
   },
 

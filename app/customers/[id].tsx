@@ -105,7 +105,7 @@ export default function CustomerDetail() {
         <View className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
           <Button
             title={lang === 'ar' ? 'تسجيل دفعة نقدية' : 'Record Payment'}
-            onPress={() => router.push(`/payments/new?type=customer&id=${c.id}`)}
+            onPress={() => router.push(`/payments/new?type=customer&id=${c.id}` as any)}
           />
         </View>
       </Card>
@@ -169,7 +169,7 @@ export default function CustomerDetail() {
           }
           renderItem={({ item }) => (
             <Pressable
-              onPress={() => router.push(`/payments/${item.id}`)}
+              onPress={() => router.push(`/payments/${item.id}` as any)}
               className="mb-2 flex-row items-center justify-between rounded-2xl bg-white p-4 dark:bg-slate-800"
             >
               <View>

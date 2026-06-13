@@ -27,6 +27,7 @@ export default function NewProduct() {
       purchase_price: 0,
       sale_price: 0,
       minimum_stock: 0,
+      opening_stock: 0,
     },
     resolver: zodResolver(productSchema) as any,
   });
@@ -113,6 +114,19 @@ export default function NewProduct() {
             <Input
               containerClassName="flex-1"
               label={t('products.minimumStock')}
+              keyboardType="decimal-pad"
+              value={String(field.value ?? '')}
+              onChangeText={(tx) => field.onChange(tx)}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="opening_stock"
+          render={({ field }) => (
+            <Input
+              containerClassName="flex-1"
+              label={lang === 'ar' ? 'رصيد أول المدة' : 'Opening Stock'}
               keyboardType="decimal-pad"
               value={String(field.value ?? '')}
               onChangeText={(tx) => field.onChange(tx)}

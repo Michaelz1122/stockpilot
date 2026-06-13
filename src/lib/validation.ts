@@ -22,6 +22,7 @@ export const productSchema = z.object({
   purchase_price: num(0),
   sale_price: num(0),
   minimum_stock: num(0),
+  opening_stock: num(0),
 });
 export type ProductInput = z.infer<typeof productSchema>;
 

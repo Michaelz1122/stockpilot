@@ -46,7 +46,7 @@ export default function NewPayment() {
         amount: val,
         notes: notes || null,
       });
-      router.replace(`/payments/${payment.id}`);
+      router.replace(`/payments/${payment.id}` as any);
     } catch (e: any) {
       Alert.alert(lang === 'ar' ? 'خطأ' : 'Error', e?.message ?? '');
     } finally {
