@@ -54,23 +54,28 @@ export default function ProductDetail() {
         subtitle={p.category ?? p.sku ?? ''}
         showBack
         right={
-          <Pressable
-            onPress={() =>
-              Alert.alert(t('common.delete'), t('products.deletePrompt'), [
-                { text: t('common.cancel'), style: 'cancel' },
-                {
-                  text: t('common.delete'),
-                  style: 'destructive',
-                  onPress: async () => {
-                    await ProductsRepo.remove(p.id);
-                    router.back();
+          <View className="flex-row items-center gap-4">
+            <Pressable onPress={() => router.push(`/products/new?id=${p.id}`)}>
+              <Ionicons name="pencil" size={20} color="#3b82f6" />
+            </Pressable>
+            <Pressable
+              onPress={() =>
+                Alert.alert(t('common.delete'), t('products.deletePrompt'), [
+                  { text: t('common.cancel'), style: 'cancel' },
+                  {
+                    text: t('common.delete'),
+                    style: 'destructive',
+                    onPress: async () => {
+                      await ProductsRepo.remove(p.id);
+                      router.back();
+                    },
                   },
-                },
-              ])
-            }
-          >
-            <Ionicons name="trash" size={20} color="#ef4444" />
-          </Pressable>
+                ])
+              }
+            >
+              <Ionicons name="trash" size={20} color="#ef4444" />
+            </Pressable>
+          </View>
         }
       />
       <Card>

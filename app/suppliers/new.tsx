@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Alert, View, ActivityIndicator } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
@@ -12,12 +12,38 @@ import { useLocale } from '@/hooks/useLocale';
 
 export default function NewSupplier() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  const isEditing = !!id;
+  const { t, lang } = useLocale();
   const { storeId } = useActiveStore();
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit } = useForm({
+  const [initialLoading, setInitialLoading] = useState(isEditing);
+
+  const { control, handleSubmit, reset } = useForm({
     defaultValues: { name: '', phone: '', address: '', notes: '', opening_balance: '0' },
   });
+
+  useEffect(() => {
+    if (!isEditing || !id) return;
+    (async () => {
+      try {
+        const supplier = await SuppliersRepo.get(id);
+        if (supplier) {
+          reset({
+            name: supplier.name,
+            phone: supplier.phone ?? '',
+            address: supplier.address ?? '',
+            notes: supplier.notes ?? '',
+            opening_balance: '0', // hidden during edit, so value doesn't matter
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setInitialLoading(false);
+      }
+    })();
+  }, [id, isEditing, reset]);
 
   const submit = async (data: any) => {
     if (!storeId) return;
@@ -27,10 +53,19 @@ export default function NewSupplier() {
     }
     setLoading(true);
     try {
-      await SuppliersRepo.create(storeId, {
-        ...data,
-        opening_balance: Number(data.opening_balance ?? 0),
-      });
+      if (isEditing && id) {
+        await SuppliersRepo.update(id, {
+          name: data.name,
+          phone: data.phone,
+          address: data.address,
+          notes: data.notes,
+        });
+      } else {
+        await SuppliersRepo.create(storeId, {
+          ...data,
+          opening_balance: Number(data.opening_balance ?? 0),
+        });
+      }
       router.back();
     } catch (e: any) {
       Alert.alert(t('common.error'), e?.message ?? t('invoices.couldNotSave'));
@@ -39,9 +74,20 @@ export default function NewSupplier() {
     }
   };
 
+  if (initialLoading) {
+    return (
+      <Screen>
+        <Header title={lang === 'ar' ? 'تعديل المورد' : 'Edit Supplier'} showBack />
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#2563eb" />
+        </View>
+      </Screen>
+    );
+  }
+
   return (
     <Screen scroll>
-      <Header title={t('supplier.newTitle')} showBack />
+      <Header title={isEditing ? (lang === 'ar' ? 'تعديل المورد' : 'Edit Supplier') : t('supplier.newTitle')} showBack />
       <Controller control={control} name="name" render={({ field }) => (
         <Input label={t('customer.name')} value={field.value} onChangeText={field.onChange} />
       )} />
@@ -51,14 +97,16 @@ export default function NewSupplier() {
       <Controller control={control} name="address" render={({ field }) => (
         <Input label={t('customer.address')} value={field.value} onChangeText={field.onChange} />
       )} />
-      <Controller control={control} name="opening_balance" render={({ field }) => (
-        <Input
-          label={t('customer.openingBalance')}
-          keyboardType="decimal-pad"
-          value={String(field.value ?? '')}
-          onChangeText={field.onChange}
-        />
-      )} />
+      {!isEditing && (
+        <Controller control={control} name="opening_balance" render={({ field }) => (
+          <Input
+            label={t('customer.openingBalance')}
+            keyboardType="decimal-pad"
+            value={String(field.value ?? '')}
+            onChangeText={field.onChange}
+          />
+        )} />
+      )}
       <Controller control={control} name="notes" render={({ field }) => (
         <Input label={t('customer.notes')} value={field.value} onChangeText={field.onChange} multiline numberOfLines={3} />
       )} />

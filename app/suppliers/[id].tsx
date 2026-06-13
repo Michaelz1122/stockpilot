@@ -68,23 +68,28 @@ export default function SupplierDetail() {
         subtitle={s.phone ?? ''}
         showBack
         right={
-          <Pressable
-            onPress={() =>
-              Alert.alert(t('common.delete'), t('supplier.deletePrompt'), [
-                { text: t('common.cancel'), style: 'cancel' },
-                {
-                  text: t('common.delete'),
-                  style: 'destructive',
-                  onPress: async () => {
-                    await SuppliersRepo.remove(s.id);
-                    router.back();
+          <View className="flex-row items-center gap-4">
+            <Pressable onPress={() => router.push(`/suppliers/new?id=${s.id}`)}>
+              <Ionicons name="pencil" size={20} color="#3b82f6" />
+            </Pressable>
+            <Pressable
+              onPress={() =>
+                Alert.alert(t('common.delete'), t('supplier.deletePrompt'), [
+                  { text: t('common.cancel'), style: 'cancel' },
+                  {
+                    text: t('common.delete'),
+                    style: 'destructive',
+                    onPress: async () => {
+                      await SuppliersRepo.remove(s.id);
+                      router.back();
+                    },
                   },
-                },
-              ])
-            }
-          >
-            <Ionicons name="trash" size={20} color="#ef4444" />
-          </Pressable>
+                ])
+              }
+            >
+              <Ionicons name="trash" size={20} color="#ef4444" />
+            </Pressable>
+          </View>
         }
       />
       <Card>
