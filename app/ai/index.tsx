@@ -261,7 +261,7 @@ Critical rules:
                 style={{ writingDirection: isRTL ? 'rtl' : 'ltr' }}
                 className={
                   item.role === 'user'
-                    ? 'text-primary-foreground'
+                    ? 'text-white'
                     : 'text-foreground'
                 }
               >

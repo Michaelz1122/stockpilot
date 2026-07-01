@@ -80,7 +80,7 @@ export default function Contacts() {
         className="mb-3 flex-row items-center justify-center gap-2 rounded-xl bg-brand-600 py-3"
       >
         <Ionicons name="person-add" size={18} color="#fff" />
-        <Text className="font-semibold text-primary-foreground">
+        <Text className="font-semibold text-white">
           {tab === 'customers' ? t('contacts.addCustomer') : t('contacts.addSupplier')}
         </Text>
       </Pressable>

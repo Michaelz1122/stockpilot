@@ -183,7 +183,7 @@ export default function ImportWizard() {
                 }`}
               >
                 <Text
-                  className={`text-xs font-bold ${step === s ? 'text-primary-foreground' : 'text-muted-foreground'}`}
+                  className={`text-xs font-bold ${step === s ? 'text-white' : 'text-muted-foreground'}`}
                 >
                   {i + 1}
                 </Text>
@@ -267,7 +267,7 @@ export default function ImportWizard() {
                 >
                   <Text
                     className={`text-xs font-semibold ${
-                      i === sheetIdx ? 'text-primary-foreground' : 'text-foreground'
+                      i === sheetIdx ? 'text-white' : 'text-foreground'
                     }`}
                   >
                     {s.name}

@@ -80,7 +80,7 @@ export default function Reports() {
             <Text
               className={cn(
                 'text-center text-xs font-semibold',
-                view === v ? 'text-primary-foreground' : 'text-card-foreground',
+                view === v ? 'text-white' : 'text-card-foreground',
               )}
             >
               {viewLabel[v]}
@@ -114,7 +114,7 @@ export default function Reports() {
                     <Text
                       className={cn(
                         'text-center text-xs font-semibold',
-                        period === p ? 'text-primary-foreground' : 'text-secondary-foreground',
+                        period === p ? 'text-white' : 'text-secondary-foreground',
                       )}
                     >
                       {t(`reports.period.${p}`)}

@@ -161,14 +161,14 @@ export default function Dashboard() {
               className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-brand-600 py-4"
             >
               <Ionicons name="add-circle" color="#fff" size={20} />
-              <Text className="font-semibold text-primary-foreground">{t('dashboard.newSale')}</Text>
+              <Text className="font-semibold text-white">{t('dashboard.newSale')}</Text>
             </Pressable>
             <Pressable
               onPress={() => router.push('/invoices/new-purchase')}
               className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4"
             >
               <Ionicons name="download" color="#fff" size={20} />
-              <Text className="font-semibold text-primary-foreground">{t('dashboard.newPurchase')}</Text>
+              <Text className="font-semibold text-white">{t('dashboard.newPurchase')}</Text>
             </Pressable>
           </View>
 
@@ -187,7 +187,7 @@ export default function Dashboard() {
               className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-slate-900 dark:bg-slate-700 py-4"
             >
               <Ionicons name="sparkles" color="#fff" size={20} />
-              <Text className="font-semibold text-primary-foreground">{t('dashboard.aiAssistant')}</Text>
+              <Text className="font-semibold text-white">{t('dashboard.aiAssistant')}</Text>
             </Pressable>
           </View>
         </>
