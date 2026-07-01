@@ -195,7 +195,7 @@ export default function NewSale() {
         </Text>
         {items.map((i, idx) => (
           <InvoiceItemRow
-            key={i.product.id}
+            key={`${i.product.id}-${idx}`}
             product={i.product}
             quantity={i.quantity}
             unit_price={i.unit_price}

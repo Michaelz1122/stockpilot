@@ -202,7 +202,7 @@ export default function Reports() {
             { header: t('reports.suppliersHeader') },
             ...(outstandingSuppliers.data ?? []).map((s: any) => ({ ...s, kind: 'supplier' })),
           ]}
-          keyExtractor={(it: any, idx) => it.id ?? `h-${idx}`}
+          keyExtractor={(it: any, idx) => it.id ? `${it.kind}-${it.id}-${idx}` : `h-${idx}`}
           renderItem={({ item }: any) =>
             item.header ? (
               <Text className="mb-1 mt-3 text-xs font-semibold uppercase text-muted-foreground">
