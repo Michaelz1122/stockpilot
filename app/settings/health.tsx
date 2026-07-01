@@ -122,7 +122,7 @@ export default function DataHealthScreen() {
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="#0284C7" className="text-primary" className="mt-8" />
+        <ActivityIndicator size="large" color="#0284C7" className="text-primary mt-8" />
       ) : duplicates.length === 0 ? (
         <View className="flex-1 items-center justify-center pt-10">
           <Ionicons name="checkmark-circle" size={64} color="#0284C7" className="text-primary" />
