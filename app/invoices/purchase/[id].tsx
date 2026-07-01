@@ -1,6 +1,7 @@
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useColorScheme } from 'nativewind';
 import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
@@ -18,6 +19,8 @@ import { shareInvoiceAsText } from '@/lib/invoice-share';
 export default function PurchaseDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#cbd5e1' : '#0f172a';
   const { t } = useLocale();
   const { storeId, store } = useActiveStore();
   const inv = useAsync(() => PurchasesRepo.get(String(id)), [id]);
@@ -87,7 +90,7 @@ export default function PurchaseDetail() {
                 onPress={() => router.push(`/invoices/new-purchase?id=${i.id}` as any)}
                 className="p-1"
               >
-                <Ionicons name="pencil" size={20} className="text-foreground dark:text-slate-300" />
+                <Ionicons name="pencil" size={20} color={iconColor} />
               </Pressable>
               <Pressable onPress={onDelete} className="p-1">
                 <Ionicons name="trash-outline" size={20} color="#ef4444" />
@@ -144,8 +147,8 @@ export default function PurchaseDetail() {
             return (
               <Card key={item.id} className="mb-2">
                 <View className="flex-row items-start gap-3">
-                  <View className="h-8 w-8 items-center justify-center rounded-full bg-secondary">
-                    <Text className="text-xs font-bold text-secondary-foreground">
+                  <View className="h-8 w-8 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700">
+                    <Text className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {idx + 1}
                     </Text>
                   </View>
