@@ -20,14 +20,14 @@ export const PurchasesRepo = {
   async get(id: string): Promise<FullPurchaseInvoice | null> {
     const { data: inv, error } = await sb()
       .from('purchase_invoices')
-      .select('*')
+      .select('*').limit(100000)
       .eq('id', id)
       .maybeSingle();
     if (error) throw error;
     if (!inv) return null;
     const { data: items, error: e2 } = await sb()
       .from('purchase_invoice_items')
-      .select('*')
+      .select('*').limit(100000)
       .eq('invoice_id', id);
     if (e2) throw e2;
     return {
@@ -73,3 +73,4 @@ export const PurchasesRepo = {
     if (error) throw error;
   },
 };
+

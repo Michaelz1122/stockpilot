@@ -5,7 +5,7 @@ export const StoresRepo = {
   async list(): Promise<Store[]> {
     const { data, error } = await sb()
       .from('stores')
-      .select('*')
+      .select('*').limit(100000)
       .order('created_at', { ascending: false });
     if (error) throw error;
     return (data ?? []) as Store[];
@@ -50,3 +50,4 @@ export const StoresRepo = {
     return data as string;
   },
 };
+

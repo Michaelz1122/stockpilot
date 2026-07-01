@@ -90,7 +90,7 @@ export const BackupService = {
     // @ts-ignore
     await FileSystem.writeAsStringAsync(fileUri, json, {
       // @ts-ignore
-      encoding: FileSystem.EncodingType.UTF8,
+      encoding: 'utf8',
     });
 
     if (await Sharing.isAvailableAsync()) {
@@ -116,7 +116,7 @@ export const BackupService = {
     // @ts-ignore
     const fileContent = await FileSystem.readAsStringAsync(result.assets[0].uri, {
       // @ts-ignore
-      encoding: FileSystem.EncodingType.UTF8,
+      encoding: 'utf8',
     });
 
     try {
@@ -142,3 +142,4 @@ export const BackupService = {
     }
   }
 };
+

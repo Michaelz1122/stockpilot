@@ -82,7 +82,7 @@ export const ExcelService = {
     if (res.canceled || !res.assets?.[0]) return null;
     const asset = res.assets[0];
     const base64 = await FileSystem.readAsStringAsync(asset.uri, {
-      encoding: FileSystem.EncodingType.Base64,
+      encoding: 'base64',
     });
     const wb = XLSX.read(base64, { type: 'base64' });
     const sheets: ParsedSheet[] = wb.SheetNames.map((name) => {
@@ -165,7 +165,7 @@ export const ExcelService = {
     const wbBase64 = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
     const uri = FileSystem.cacheDirectory + fileName;
     await FileSystem.writeAsStringAsync(uri, wbBase64, {
-      encoding: FileSystem.EncodingType.Base64,
+      encoding: 'base64',
     });
     if (await Sharing.isAvailableAsync()) {
       await Sharing.shareAsync(uri, {
@@ -177,3 +177,4 @@ export const ExcelService = {
     return uri;
   },
 };
+

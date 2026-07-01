@@ -63,7 +63,7 @@ export async function shareInvoiceAsText(args: {
   const fileName = `invoice-${invoice.invoice_number ?? 'untitled'}.txt`.replace(/\s+/g, '_');
   const uri = FileSystem.cacheDirectory + fileName;
   await FileSystem.writeAsStringAsync(uri, body, {
-    encoding: FileSystem.EncodingType.UTF8,
+    encoding: 'utf8',
   });
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(uri, { mimeType: 'text/plain', dialogTitle: fileName });
@@ -98,9 +98,10 @@ export async function sharePaymentAsText(args: {
   const fileName = `receipt-${payment.id.slice(0, 8)}.txt`;
   const uri = FileSystem.cacheDirectory + fileName;
   await FileSystem.writeAsStringAsync(uri, body, {
-    encoding: FileSystem.EncodingType.UTF8,
+    encoding: 'utf8',
   });
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(uri, { mimeType: 'text/plain', dialogTitle: fileName });
   }
 }
+

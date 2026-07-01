@@ -4,7 +4,7 @@ import { sb } from './base';
 export const SuppliersRepo = {
   async list(storeId: string): Promise<Supplier[]> {
     const [{ data: rows, error }, balances] = await Promise.all([
-      sb().from('suppliers').select('*').eq('store_id', storeId).order('name'),
+      sb().from('suppliers').select('*').limit(100000).eq('store_id', storeId).order('name'),
       sb().from('v_supplier_balance').select('supplier_id, balance').eq('store_id', storeId),
     ]);
     if (error) throw error;
@@ -30,7 +30,7 @@ export const SuppliersRepo = {
   async get(id: string): Promise<Supplier | null> {
     const { data, error } = await sb()
       .from('suppliers')
-      .select('*')
+      .select('*').limit(100000)
       .eq('id', id)
       .maybeSingle();
     if (error) throw error;
@@ -94,3 +94,4 @@ export const SuppliersRepo = {
     if (error) throw error;
   },
 };
+

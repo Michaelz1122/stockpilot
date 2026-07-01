@@ -4,7 +4,7 @@ import { sb } from './base';
 export const CustomersRepo = {
   async list(storeId: string): Promise<Customer[]> {
     const [{ data: rows, error }, balances] = await Promise.all([
-      sb().from('customers').select('*').eq('store_id', storeId).order('name'),
+      sb().from('customers').select('*').limit(100000).eq('store_id', storeId).order('name'),
       sb().from('v_customer_balance').select('customer_id, balance').eq('store_id', storeId),
     ]);
     if (error) throw error;
@@ -30,7 +30,7 @@ export const CustomersRepo = {
   async get(id: string): Promise<Customer | null> {
     const { data, error } = await sb()
       .from('customers')
-      .select('*')
+      .select('*').limit(100000)
       .eq('id', id)
       .maybeSingle();
     if (error) throw error;
@@ -94,3 +94,4 @@ export const CustomersRepo = {
     if (error) throw error;
   },
 };
+

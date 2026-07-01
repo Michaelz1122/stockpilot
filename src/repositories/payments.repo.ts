@@ -16,7 +16,7 @@ export const PaymentsRepo = {
   async list(storeId: string): Promise<Payment[]> {
     const { data, error } = await (getSupabase() as any)
       .from('payments')
-      .select('*')
+      .select('*').limit(100000)
       .eq('store_id', storeId)
       .order('payment_date', { ascending: false });
     if (error) throw error;
@@ -26,7 +26,7 @@ export const PaymentsRepo = {
   async get(id: string): Promise<Payment> {
     const { data, error } = await (getSupabase() as any)
       .from('payments')
-      .select('*')
+      .select('*').limit(100000)
       .eq('id', id)
       .single();
     if (error) throw error;
@@ -48,3 +48,4 @@ export const PaymentsRepo = {
     if (error) throw error;
   },
 };
+

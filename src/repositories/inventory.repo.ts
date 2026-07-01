@@ -5,7 +5,7 @@ export const InventoryRepo = {
   async list(storeId: string, productId?: string): Promise<InventoryTransaction[]> {
     let q = sb()
       .from('inventory_transactions')
-      .select('*')
+      .select('*').limit(100000)
       .eq('store_id', storeId)
       .order('created_at', { ascending: false });
     if (productId) q = q.eq('product_id', productId);
@@ -87,3 +87,4 @@ export const InventoryRepo = {
     return m;
   },
 };
+

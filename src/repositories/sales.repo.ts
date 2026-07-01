@@ -20,14 +20,14 @@ export const SalesRepo = {
   async get(id: string): Promise<FullSalesInvoice | null> {
     const { data: inv, error } = await sb()
       .from('sales_invoices')
-      .select('*')
+      .select('*').limit(100000)
       .eq('id', id)
       .maybeSingle();
     if (error) throw error;
     if (!inv) return null;
     const { data: items, error: e2 } = await sb()
       .from('sales_invoice_items')
-      .select('*')
+      .select('*').limit(100000)
       .eq('invoice_id', id);
     if (e2) throw e2;
     return { ...(inv as SalesInvoice), items: (items ?? []) as SalesInvoiceItem[] };
@@ -70,3 +70,4 @@ export const SalesRepo = {
     if (error) throw error;
   },
 };
+

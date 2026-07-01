@@ -5,7 +5,7 @@ export const ProductsRepo = {
   async list(storeId: string): Promise<Product[]> {
     const { data, error } = await sb()
       .from('v_product_with_stock')
-      .select('*')
+      .select('*').limit(100000)
       .eq('store_id', storeId)
       .order('name');
     if (error) throw error;
@@ -40,7 +40,7 @@ export const ProductsRepo = {
   async get(id: string): Promise<Product | null> {
     const { data, error } = await sb()
       .from('v_product_with_stock')
-      .select('*')
+      .select('*').limit(100000)
       .eq('id', id)
       .maybeSingle();
     if (error) throw error;
@@ -50,7 +50,7 @@ export const ProductsRepo = {
   async getUnits(productId: string): Promise<ProductUnit[]> {
     const { data, error } = await sb()
       .from('product_units')
-      .select('*')
+      .select('*').limit(100000)
       .eq('product_id', productId)
       .order('created_at', { ascending: true });
     if (error) throw error;
@@ -177,3 +177,4 @@ export const ProductsRepo = {
     if (error) throw error;
   },
 };
+

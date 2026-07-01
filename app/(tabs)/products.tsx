@@ -64,7 +64,11 @@ export default function Products() {
       const res = await ProductsRepo.search(storeId, searchQuery, currentSort, limit, currentOffset);
 
       if (append) {
-        setData(prev => [...prev, ...res]);
+        setData(prev => {
+          const all = [...prev, ...res];
+          const unique = new Map(all.map(item => [item.id, item]));
+          return Array.from(unique.values());
+        });
       } else {
         setData(res);
       }
