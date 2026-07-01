@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Alert, View, ActivityIndicator } from 'react-native';
+import { Alert, View, ActivityIndicator, Pressable, Text } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
+import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
 import { Input } from '@/components/ui/Input';
@@ -20,6 +21,7 @@ export default function NewProduct() {
   const { storeId } = useActiveStore();
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(isEditing);
+  const [unitInput, setUnitInput] = useState('');
 
   const { control, handleSubmit, reset, formState: { errors } } = useForm<ProductInput>({
     defaultValues: {
@@ -40,7 +42,10 @@ export default function NewProduct() {
     if (!isEditing || !id) return;
     (async () => {
       try {
-        const product = await ProductsRepo.get(id);
+        const [product, units] = await Promise.all([
+          ProductsRepo.get(id),
+          ProductsRepo.getUnits(id)
+        ]);
         if (product) {
           reset({
             name: product.name,
@@ -52,6 +57,8 @@ export default function NewProduct() {
             sale_price: product.sale_price,
             minimum_stock: product.minimum_stock,
             opening_stock: 0,
+            units: units.map(u => u.name),
+            is_favorite: product.is_favorite ?? false,
           });
         }
       } catch (err) {
@@ -229,7 +236,79 @@ export default function NewProduct() {
           />
         )}
       />
-      <Button title={t('products.saveProduct')} loading={loading} onPress={handleSubmit(submit)} />
+
+      <View className="mt-4">
+        <Controller
+          control={control}
+          name="is_favorite"
+          render={({ field }) => (
+            <Pressable 
+              onPress={() => field.onChange(!field.value)}
+              className="flex-row items-center justify-between rounded-xl border border-border bg-card p-4 mb-3"
+            >
+              <View>
+                <Text className="text-base font-semibold text-card-foreground">
+                  {lang === 'ar' ? 'صنف مفضل' : 'Favorite Product'}
+                </Text>
+                <Text className="text-xs text-muted-foreground">
+                  {lang === 'ar' ? 'يظهر دائماً في أعلى قوائم البحث' : 'Always appears at the top of search lists'}
+                </Text>
+              </View>
+              <Ionicons 
+                name={field.value ? 'star' : 'star-outline'} 
+                size={24} 
+                color={field.value ? '#F59E0B' : 'var(--muted-foreground)'} 
+              />
+            </Pressable>
+          )}
+        />
+      </View>
+
+      <Controller
+        control={control}
+        name="units"
+        render={({ field }) => {
+          const addUnit = () => {
+            if (!unitInput.trim()) return;
+            const newUnits = [...(field.value || []), unitInput.trim()];
+            field.onChange(newUnits);
+            setUnitInput('');
+          };
+          const removeUnit = (index: number) => {
+            const newUnits = (field.value || []).filter((_, i) => i !== index);
+            field.onChange(newUnits);
+          };
+          return (
+            <View className="mb-4">
+              <Text className="text-sm font-semibold text-card-foreground mb-2">
+                {lang === 'ar' ? 'وحدات القياس' : 'Units'}
+              </Text>
+              <View className="flex-row gap-2 mb-2">
+                <Input
+                  containerClassName="flex-1"
+                  placeholder={lang === 'ar' ? 'مثال: قطعة، كرتونة، لفة' : 'e.g. Piece, Box, Roll'}
+                  value={unitInput}
+                  onChangeText={setUnitInput}
+                  onSubmitEditing={addUnit}
+                />
+                <Button title={t('common.add')} onPress={addUnit} className="h-12" />
+              </View>
+              <View className="flex-row flex-wrap gap-2">
+                {(field.value || []).map((u, i) => (
+                  <View key={i} className="flex-row items-center bg-secondary rounded-full px-3 py-1">
+                    <Text className="text-sm text-secondary-foreground mr-2">{u}</Text>
+                    <Pressable onPress={() => removeUnit(i)}>
+                      <Ionicons name="close-circle" size={18} color="var(--muted-foreground)" />
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
+            </View>
+          );
+        }}
+      />
+
+      <Button title={t('products.saveProduct')} loading={loading} onPress={handleSubmit(submit)} className="mt-4 mb-8" />
     </Screen>
   );
 }

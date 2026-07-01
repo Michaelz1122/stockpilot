@@ -1,15 +1,17 @@
 import { TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { cn } from '@/lib/cn';
 
 interface Props {
   value: string;
   onChangeText: (v: string) => void;
   placeholder?: string;
+  containerClassName?: string;
 }
 
-export function SearchBar({ value, onChangeText, placeholder = 'Search…' }: Props) {
+export function SearchBar({ value, onChangeText, placeholder = 'Search…', containerClassName }: Props) {
   return (
-    <View className="mb-3 flex-row items-center rounded-xl border border-slate-200 bg-white px-3 dark:border-slate-700 dark:bg-slate-800">
+    <View className={cn("mb-3 flex-row items-center rounded-xl border border-slate-200 bg-white px-3 dark:border-slate-700 dark:bg-slate-800", containerClassName)}>
       <Ionicons name="search" size={18} color="#64748b" />
       <TextInput
         value={value}

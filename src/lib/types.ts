@@ -18,6 +18,14 @@ export interface Store {
   updated_at: string;
 }
 
+export interface ProductUnit {
+  id: UUID;
+  product_id: UUID;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: UUID;
   store_id: UUID;
@@ -30,6 +38,8 @@ export interface Product {
   sale_price: number;
   minimum_stock: number;
   current_stock?: number;
+  is_favorite?: boolean;
+  recently_used_at?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -66,6 +76,7 @@ export interface InventoryTransaction {
   id: UUID;
   store_id: UUID;
   product_id: UUID;
+  unit_id?: UUID | null;
   type: InventoryTxType;
   quantity: number;
   unit_cost: number;
@@ -77,6 +88,7 @@ export interface InventoryTransaction {
 
 export interface InvoiceItemInput {
   product_id: UUID;
+  unit_id?: UUID | null;
   quantity: number;
   unit_price?: number;
   unit_cost?: number;
@@ -101,6 +113,7 @@ export interface SalesInvoiceItem {
   id: UUID;
   invoice_id: UUID;
   product_id: UUID;
+  unit_id?: UUID | null;
   quantity: number;
   unit_price: number;
   unit_cost: number;
@@ -126,8 +139,10 @@ export interface PurchaseInvoiceItem {
   id: UUID;
   invoice_id: UUID;
   product_id: UUID;
+  unit_id?: UUID | null;
   quantity: number;
   unit_cost: number;
   discount: number;
   line_total: number;
 }
+

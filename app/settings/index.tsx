@@ -9,6 +9,7 @@ import { ListItem } from '@/components/ui/ListItem';
 import { useLocale } from '@/hooks/useLocale';
 import { LANG_INITIALIZED_KEY, setLanguage, type SupportedLang } from '@/i18n';
 import { cn } from '@/lib/cn';
+import { useSettingsStore } from '@/state/settings';
 
 const OPTIONS: Array<{ code: SupportedLang; native: string; flag: string }> = [
   { code: 'ar', native: 'العربية', flag: '🇪🇬' },
@@ -43,11 +44,11 @@ export default function Settings() {
     <Screen padded scroll>
       <Header title={t('settings.title')} showBack />
 
-      <Card className="mb-3">
-        <Text className="text-base font-bold text-slate-900 dark:text-slate-50">
+      <Card className="mb-3 bg-card border-border">
+        <Text className="text-base font-bold text-card-foreground">
           {t('settings.language')}
         </Text>
-        <Text className="mt-1 text-xs text-slate-500">
+        <Text className="mt-1 text-xs text-muted-foreground">
           {t('settings.languageHint')}
         </Text>
         <View className="mt-3">
@@ -60,25 +61,41 @@ export default function Settings() {
                 className={cn(
                   'mb-2 flex-row items-center justify-between rounded-xl border p-4',
                   active
-                    ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30'
-                    : 'border-slate-200 dark:border-slate-700',
+                    ? 'border-primary bg-primary/10'
+                    : 'border-border bg-card',
                 )}
               >
                 <View className="flex-row items-center gap-3">
                   <Text className="text-2xl">{opt.flag}</Text>
-                  <Text className="text-base font-semibold text-slate-900 dark:text-slate-50">
+                  <Text className="text-base font-semibold text-card-foreground">
                     {opt.native}
                   </Text>
                 </View>
                 {active && (
-                  <Ionicons name="checkmark-circle" size={22} color="#2563eb" />
+                  <Ionicons name="checkmark-circle" size={22} color="var(--primary)" />
                 )}
               </Pressable>
             );
           })}
         </View>
-        <Text className="mt-2 text-xs text-slate-500">{t('settings.rtlNote')}</Text>
+        <Text className="mt-2 text-xs text-muted-foreground">{t('settings.rtlNote')}</Text>
       </Card>
+
+      <ThemeSelector />
+
+      <ListItem
+        title={t('settings.dataHealth')}
+        subtitle={t('settings.dataHealthHint')}
+        leadingIcon="shield-checkmark"
+        onPress={() => router.push('/settings/health' as any)}
+      />
+
+      <ListItem
+        title={t('settings.backup')}
+        subtitle={t('settings.backupHint')}
+        leadingIcon="cloud-download"
+        onPress={() => router.push('/settings/backup' as any)}
+      />
 
       <ListItem
         title={t('settings.replayOnboarding')}
@@ -87,5 +104,57 @@ export default function Settings() {
         onPress={replayOnboarding}
       />
     </Screen>
+  );
+}
+
+function ThemeSelector() {
+  const { t } = useLocale();
+  const theme = useSettingsStore((s) => s.theme);
+  const setTheme = useSettingsStore((s) => s.setTheme);
+
+  const OPTIONS = [
+    { value: 'light', label: t('settings.light'), icon: 'sunny' as const },
+    { value: 'dark', label: t('settings.dark'), icon: 'moon' as const },
+    { value: 'system', label: t('settings.system'), icon: 'desktop' as const },
+  ] as const;
+
+  return (
+    <Card className="mb-3 bg-card border-border">
+      <Text className="text-base font-bold text-card-foreground">
+        {t('settings.theme')}
+      </Text>
+      <Text className="mt-1 text-xs text-muted-foreground">
+        {t('settings.themeHint')}
+      </Text>
+      <View className="mt-3 flex-row gap-2">
+        {OPTIONS.map((opt) => {
+          const active = theme === opt.value;
+          return (
+            <Pressable
+              key={opt.value}
+              onPress={() => setTheme(opt.value)}
+              className={cn(
+                'flex-1 flex-row items-center justify-center gap-2 rounded-xl border p-3',
+                active
+                  ? 'border-primary bg-primary/10'
+                  : 'border-border bg-card'
+              )}
+            >
+              <Ionicons 
+                name={opt.icon} 
+                size={18} 
+                color={active ? 'var(--primary)' : 'var(--muted-foreground)'} 
+              />
+              <Text className={cn(
+                'text-sm font-semibold',
+                active ? 'text-primary' : 'text-card-foreground'
+              )}>
+                {opt.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </Card>
   );
 }

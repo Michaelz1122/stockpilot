@@ -9,6 +9,7 @@ interface Props {
   onPress?: () => void;
   className?: string;
   leadingIcon?: keyof typeof Ionicons.glyphMap;
+  leadingIconColor?: string;
 }
 
 export function ListItem({
@@ -18,6 +19,7 @@ export function ListItem({
   onPress,
   className,
   leadingIcon,
+  leadingIconColor,
 }: Props) {
   const Container: any = onPress ? Pressable : View;
   return (
@@ -33,7 +35,7 @@ export function ListItem({
       <View className="flex-1 flex-row items-center gap-3 pe-3">
         {leadingIcon && (
           <View className="h-10 w-10 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/40">
-            <Ionicons name={leadingIcon} size={18} color="#2563eb" />
+            <Ionicons name={leadingIcon} size={18} color={leadingIconColor || "#2563eb"} />
           </View>
         )}
         <View className="flex-1">

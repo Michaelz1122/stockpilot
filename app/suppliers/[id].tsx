@@ -6,6 +6,7 @@ import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { NotesEditor } from '@/components/NotesEditor';
 import { useAsync } from '@/hooks/useAsync';
 import { useActiveStore } from '@/hooks/useActiveStore';
 import { useLocale } from '@/hooks/useLocale';
@@ -46,7 +47,7 @@ export default function SupplierDetail() {
     return (
       <Screen>
         <Header title={t('supplier.detailsTitle')} showBack />
-        <Text className="text-slate-500">{t('common.loading')}</Text>
+        <Text className="text-muted-foreground">{t('common.loading')}</Text>
       </Screen>
     );
   }
@@ -61,6 +62,10 @@ export default function SupplierDetail() {
   );
   const balance = Number(s.opening_balance ?? 0) + owedFromPurchases - totalPaid;
 
+  const saveNotes = async (notes: string) => {
+    await SuppliersRepo.update(s.id, { notes });
+  };
+
   return (
     <Screen padded>
       <Header
@@ -70,7 +75,7 @@ export default function SupplierDetail() {
         right={
           <View className="flex-row items-center gap-4">
             <Pressable onPress={() => router.push(`/suppliers/new?id=${s.id}`)}>
-              <Ionicons name="pencil" size={20} color="#3b82f6" />
+              <Ionicons name="pencil" size={20} color="var(--primary)" />
             </Pressable>
             <Pressable
               onPress={() =>
@@ -87,13 +92,13 @@ export default function SupplierDetail() {
                 ])
               }
             >
-              <Ionicons name="trash" size={20} color="#ef4444" />
+              <Ionicons name="trash" size={20} color="var(--destructive)" />
             </Pressable>
           </View>
         }
       />
-      <Card>
-        <Text className="text-xs uppercase tracking-wide text-slate-500">
+      <Card className="bg-card border-border">
+        <Text className="text-xs uppercase tracking-wide text-muted-foreground">
           {t('supplier.balanceOwed')}
         </Text>
         <Text
@@ -101,14 +106,16 @@ export default function SupplierDetail() {
         >
           {formatMoney(balance, store?.currency)}
         </Text>
-        {!!s.address && <Text className="mt-2 text-sm text-slate-500">{s.address}</Text>}
-        <View className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+        {!!s.address && <Text className="mt-2 text-sm text-muted-foreground">{s.address}</Text>}
+        <View className="mt-4 border-t border-border pt-4">
           <Button
             title={lang === 'ar' ? 'تسديد دفعة نقدية' : 'Make Payment'}
             onPress={() => router.push(`/payments/new?type=supplier&id=${s.id}` as any)}
           />
         </View>
       </Card>
+
+      <NotesEditor initialNotes={s.notes} onSave={saveNotes} />
 
       <View className="mb-4 mt-6 flex-row rounded-xl bg-slate-200 p-1 dark:bg-slate-800">
         <Pressable

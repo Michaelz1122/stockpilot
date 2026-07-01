@@ -6,6 +6,7 @@ import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { NotesEditor } from '@/components/NotesEditor';
 import { useAsync } from '@/hooks/useAsync';
 import { useActiveStore } from '@/hooks/useActiveStore';
 import { useLocale } from '@/hooks/useLocale';
@@ -46,7 +47,7 @@ export default function CustomerDetail() {
     return (
       <Screen>
         <Header title={t('customer.detailsTitle')} showBack />
-        <Text className="text-slate-500">{t('common.loading')}</Text>
+        <Text className="text-muted-foreground">{t('common.loading')}</Text>
       </Screen>
     );
   }
@@ -61,6 +62,10 @@ export default function CustomerDetail() {
   );
   const balance = Number(c.opening_balance ?? 0) + owedFromSales - totalPaid;
 
+  const saveNotes = async (notes: string) => {
+    await CustomersRepo.update(c.id, { notes });
+  };
+
   return (
     <Screen padded>
       <Header
@@ -70,7 +75,7 @@ export default function CustomerDetail() {
         right={
           <View className="flex-row items-center gap-4">
             <Pressable onPress={() => router.push(`/customers/new?id=${c.id}`)}>
-              <Ionicons name="pencil" size={20} color="#3b82f6" />
+              <Ionicons name="pencil" size={20} color="var(--primary)" />
             </Pressable>
             <Pressable
               onPress={() =>
@@ -87,13 +92,13 @@ export default function CustomerDetail() {
                 ])
               }
             >
-              <Ionicons name="trash" size={20} color="#ef4444" />
+              <Ionicons name="trash" size={20} color="var(--destructive)" />
             </Pressable>
           </View>
         }
       />
-      <Card>
-        <Text className="text-xs uppercase tracking-wide text-slate-500">
+      <Card className="bg-card border-border">
+        <Text className="text-xs uppercase tracking-wide text-muted-foreground">
           {t('customer.balance')}
         </Text>
         <Text
@@ -102,18 +107,17 @@ export default function CustomerDetail() {
           {formatMoney(balance, store?.currency)}
         </Text>
         {!!c.address && (
-          <Text className="mt-2 text-sm text-slate-500">{c.address}</Text>
+          <Text className="mt-2 text-sm text-muted-foreground">{c.address}</Text>
         )}
-        {!!c.notes && (
-          <Text className="mt-1 text-sm text-slate-500">{c.notes}</Text>
-        )}
-        <View className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+        <View className="mt-4 border-t border-border pt-4">
           <Button
             title={lang === 'ar' ? 'تسجيل دفعة نقدية' : 'Record Payment'}
             onPress={() => router.push(`/payments/new?type=customer&id=${c.id}` as any)}
           />
         </View>
       </Card>
+
+      <NotesEditor initialNotes={c.notes} onSave={saveNotes} />
 
       <View className="mb-4 mt-6 flex-row rounded-xl bg-slate-200 p-1 dark:bg-slate-800">
         <Pressable

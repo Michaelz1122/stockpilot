@@ -85,4 +85,12 @@ export const SuppliersRepo = {
     if (error) throw error;
     return data?.length ?? 0;
   },
+
+  async merge(primaryId: string, secondaryId: string): Promise<void> {
+    const { error } = await sb().rpc('merge_suppliers' as any, {
+      p_primary_id: primaryId,
+      p_secondary_id: secondaryId,
+    });
+    if (error) throw error;
+  },
 };

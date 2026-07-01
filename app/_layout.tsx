@@ -9,11 +9,15 @@ import { useAppStores } from '@/state/store-context';
 import { StoresRepo } from '@/repositories/stores.repo';
 import { initI18n } from '@/i18n';
 
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { useSettingsStore } from '@/state/settings';
+
 export default function RootLayout() {
   const { ready, user, init, recoveryEvent, clearRecovery } = useAuth();
   const segments = useSegments();
   const router = useRouter();
   const { setStores, hydrate } = useAppStores();
+  const hydrateSettings = useSettingsStore(s => s.hydrate);
   const [i18nReady, setI18nReady] = useState(false);
   const [firstLaunch, setFirstLaunch] = useState(false);
 
@@ -25,6 +29,7 @@ export default function RootLayout() {
     })();
     init();
     hydrate();
+    hydrateSettings();
   }, []);
 
   useEffect(() => {
@@ -72,17 +77,19 @@ export default function RootLayout() {
 
   if (!ready || !i18nReady) {
     return (
-      <View className="flex-1 items-center justify-center bg-slate-50">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator size="large" color="#0EA5E9" />
       </View>
     );
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <ThemeProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ThemeProvider>
   );
 }

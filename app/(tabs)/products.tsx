@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,61 +14,75 @@ import { useAsync } from '@/hooks/useAsync';
 import { useLocale } from '@/hooks/useLocale';
 import { ProductsRepo } from '@/repositories/products.repo';
 import { formatMoney, formatNumber } from '@/lib/format';
-import { matchesAny } from '@/lib/arabic';
+import { cn } from '@/lib/cn';
 
 export default function Products() {
   const router = useRouter();
   const { t } = useLocale();
   const { storeId, store } = useActiveStore();
   const [q, setQ] = useState('');
-  const products = useAsync(
-    () => (storeId ? ProductsRepo.list(storeId) : Promise.resolve([])),
-    [storeId],
-  );
+  const [sortBy, setSortBy] = useState('relevance');
 
-  const filtered = useMemo(() => {
-    const all = products.data ?? [];
-    if (!q) return all;
-    return all.filter((p) =>
-      matchesAny([p.name, p.sku, p.barcode, p.category, p.description], q),
-    );
-  }, [products.data, q]);
+  const products = useAsync(
+    () => (storeId ? ProductsRepo.search(storeId, q, sortBy) : Promise.resolve([])),
+    [storeId, q, sortBy],
+  );
 
   return (
     <Screen padded>
       <Header
         title={t('products.title')}
-        subtitle={t(filtered.length === 1 ? 'products.countOne' : 'products.countOther', {
-          count: filtered.length,
+        subtitle={t(products.data?.length === 1 ? 'products.countOne' : 'products.countOther', {
+          count: products.data?.length || 0,
         })}
         right={<StoreSwitcher />}
       />
-      <SearchBar value={q} onChangeText={setQ} placeholder={t('products.searchPlaceholder')} />
+      
+      <View className="flex-row gap-2 mb-3">
+        <SearchBar 
+          value={q} 
+          onChangeText={setQ} 
+          placeholder={t('products.searchPlaceholder')} 
+          containerClassName="flex-1 mb-0" 
+        />
+        <Pressable
+          onPress={() => {
+            const sorts = ['relevance', 'a-z', 'highest-stock', 'lowest-stock', 'newest'];
+            const next = sorts[(sorts.indexOf(sortBy) + 1) % sorts.length];
+            setSortBy(next);
+          }}
+          className="bg-card border border-border rounded-xl justify-center items-center px-4"
+        >
+          <Ionicons name="filter" size={20} color="var(--primary)" />
+        </Pressable>
+      </View>
+
       <View className="mb-3 flex-row gap-2">
         <Pressable
           onPress={() => router.push('/products/new')}
-          className="flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-brand-600 py-3"
+          className="flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-primary py-3"
         >
-          <Ionicons name="add" size={18} color="#fff" />
-          <Text className="font-semibold text-white">{t('products.add')}</Text>
+          <Ionicons name="add" size={18} color="var(--primary-foreground)" />
+          <Text className="font-semibold text-primary-foreground">{t('products.add')}</Text>
         </Pressable>
         <Pressable
           onPress={() => router.push('/import')}
-          className="flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-slate-200 py-3 dark:bg-slate-800"
+          className="flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-secondary py-3"
         >
-          <Ionicons name="cloud-upload" size={18} color="#0f172a" />
-          <Text className="font-semibold text-slate-900 dark:text-slate-50">{t('products.import')}</Text>
+          <Ionicons name="cloud-upload" size={18} color="var(--secondary-foreground)" />
+          <Text className="font-semibold text-secondary-foreground">{t('products.import')}</Text>
         </Pressable>
         <Pressable
           onPress={() => router.push('/export')}
-          className="flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-slate-200 py-3 dark:bg-slate-800"
+          className="flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-secondary py-3"
         >
-          <Ionicons name="cloud-download" size={18} color="#0f172a" />
-          <Text className="font-semibold text-slate-900 dark:text-slate-50">{t('products.export')}</Text>
+          <Ionicons name="cloud-download" size={18} color="var(--secondary-foreground)" />
+          <Text className="font-semibold text-secondary-foreground">{t('products.export')}</Text>
         </Pressable>
       </View>
+
       <FlatList
-        data={filtered}
+        data={products.data ?? []}
         keyExtractor={(item) => item.id}
         onRefresh={products.refresh}
         refreshing={products.loading}
@@ -99,11 +113,12 @@ export default function Products() {
             <ListItem
               title={item.name}
               subtitle={`${item.sku ? `${t('products.sku')} ${item.sku} · ` : ''}${formatMoney(item.sale_price, store?.currency)}`}
-              leadingIcon="cube"
+              leadingIcon={item.is_favorite ? 'star' : 'cube'}
+              leadingIconColor={item.is_favorite ? '#F59E0B' : undefined}
               onPress={() => router.push(`/products/${item.id}`)}
               right={
                 <View className="items-end">
-                  <Text className="text-base font-bold text-slate-900 dark:text-slate-50">
+                  <Text className="text-base font-bold text-card-foreground">
                     {formatNumber(item.current_stock ?? 0)}
                   </Text>
                   <Badge

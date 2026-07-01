@@ -12,15 +12,24 @@ import { useLocale } from '@/hooks/useLocale';
 export default function ResetPassword() {
   const router = useRouter();
   const { t, lang } = useLocale();
-  const params = useLocalSearchParams<{ email?: string; recovery?: string }>();
+  const params = useLocalSearchParams<{ email?: string; recovery?: string; code?: string }>();
   const url = Linking.useURL();
 
-  const [step, setStep] = useState<1 | 2>(params.recovery ? 2 : 1);
+  const [step, setStep] = useState<1 | 2>(params.recovery || params.code ? 2 : 1);
   const [email, setEmail] = useState(params.email ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // If the URL contains a PKCE code, exchange it for a session
+    if (params.code) {
+      setStep(2);
+      getSupabase().auth.exchangeCodeForSession(params.code).catch(err => {
+        console.error('Failed to exchange code for session:', err);
+      });
+      return;
+    }
+
     if (!url) return;
     if (url.includes('#access_token=')) {
       const hash = url.split('#')[1];
@@ -36,7 +45,7 @@ export default function ResetPassword() {
         }
       }
     }
-  }, [url]);
+  }, [url, params.code]);
 
   const handleSendLink = async () => {
     if (!email.trim()) return;

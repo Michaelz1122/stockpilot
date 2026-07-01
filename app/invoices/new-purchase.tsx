@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
@@ -17,21 +17,26 @@ import { ProductsRepo } from '@/repositories/products.repo';
 import { SuppliersRepo } from '@/repositories/suppliers.repo';
 import { PurchasesRepo } from '@/repositories/purchases.repo';
 import { formatMoney } from '@/lib/format';
-import type { Product } from '@/lib/types';
+import type { Product, ProductUnit } from '@/lib/types';
 
 interface LineItem {
+  id?: string;
   product: Product;
   quantity: string;
   unit_price: string;
   discount: string;
+  unit_id?: string;
+  availableUnits?: ProductUnit[];
 }
 
 export default function NewPurchase() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { id: editId } = useLocalSearchParams<{ id?: string }>();
+  const isEditing = !!editId;
+  const { t, lang } = useLocale();
   const { storeId, store } = useActiveStore();
   const products = useAsync(
-    () => (storeId ? ProductsRepo.list(storeId) : Promise.resolve([])),
+    () => (storeId ? ProductsRepo.search(storeId, '', 'relevance') : Promise.resolve([])),
     [storeId],
   );
   const suppliers = useAsync(
@@ -48,6 +53,43 @@ export default function NewPurchase() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => {
+    if (!isEditing || !editId) return;
+    (async () => {
+      try {
+        const inv = await PurchasesRepo.get(editId);
+        if (!inv) return;
+        setSupplierId(inv.supplier_id ?? null);
+        setInvoiceNumber(inv.invoice_number || '');
+        setDiscount(String(inv.discount));
+        setPaid(String(inv.paid));
+        setNotes(inv.notes || '');
+        
+        // Fetch products and units for items
+        const loadedItems: LineItem[] = await Promise.all(
+          inv.items.map(async (i: any) => {
+            const [product, units] = await Promise.all([
+              ProductsRepo.get(i.product_id),
+              ProductsRepo.getUnits(i.product_id)
+            ]);
+            return {
+              id: i.id,
+              product: product as Product,
+              quantity: String(i.quantity),
+              unit_price: String(i.unit_cost), // For purchase invoices, unit_cost is the price paid
+              discount: String(i.discount),
+              unit_id: i.unit_id || undefined,
+              availableUnits: units,
+            };
+          })
+        );
+        setItems(loadedItems.filter(i => i.product));
+      } catch (err) {
+        console.error('Failed to load invoice for editing', err);
+      }
+    })();
+  }, [isEditing, editId]);
+
   const subtotal = useMemo(
     () =>
       items.reduce(
@@ -61,17 +103,28 @@ export default function NewPurchase() {
   );
   const total = Math.max(0, subtotal - Number(discount || 0));
 
-  const addProduct = (p: Product) => {
-    if (items.find((i) => i.product.id === p.id)) return;
-    setItems((prev) => [
-      ...prev,
-      {
-        product: p,
-        quantity: '1',
-        unit_price: String(p.purchase_price),
-        discount: '0',
-      },
-    ]);
+  const addProduct = async (p: Product) => {
+    if (items.find((i) => i.product.id === p.id)) {
+      setItems((prev) =>
+        prev.map((i) =>
+          i.product.id === p.id
+            ? { ...i, quantity: String(Number(i.quantity || 0) + 1) }
+            : i,
+        ),
+      );
+    } else {
+      const units = await ProductsRepo.getUnits(p.id);
+      setItems((prev) => [
+        ...prev,
+        {
+          product: p,
+          quantity: '1',
+          unit_price: String(p.purchase_price),
+          discount: '0',
+          availableUnits: units,
+        },
+      ]);
+    }
   };
 
   const save = async () => {
@@ -82,24 +135,30 @@ export default function NewPurchase() {
     }
     setSaving(true);
     try {
-      const inv = await PurchasesRepo.create(
-        storeId,
-        {
-          supplier_id: supplierId ?? null,
-          invoice_number: invoiceNumber || null,
-          discount: Number(discount || 0),
-          paid: Number(paid || 0),
-          notes: notes || null,
-          items: items.map((i) => ({
-            product_id: i.product.id,
-            quantity: Number(i.quantity),
-            unit_price: i.product.sale_price,
-            unit_cost: Number(i.unit_price),
-            discount: Number(i.discount || 0),
-          })),
-        },
-      );
-      router.replace(`/invoices/purchase/${inv.id}`);
+      const payload = {
+        supplier_id: supplierId ?? null,
+        invoice_number: invoiceNumber || null,
+        discount: Number(discount || 0),
+        paid: Number(paid || 0),
+        notes: notes || null,
+        items: items.map((i) => ({
+          product_id: i.product.id,
+          quantity: Number(i.quantity),
+          unit_price: i.product.sale_price,
+          unit_cost: Number(i.unit_price),
+          discount: Number(i.discount || 0),
+          unit_id: i.unit_id || null,
+        })),
+      };
+
+      if (isEditing && editId) {
+        await PurchasesRepo.update(editId, payload as any);
+        Alert.alert(lang === 'ar' ? 'تم التعديل' : 'Success');
+        router.back();
+      } else {
+        const inv = await PurchasesRepo.create(storeId, payload as any);
+        router.replace(`/invoices/purchase/${inv.id}`);
+      }
     } catch (e: any) {
       Alert.alert(t('common.error'), e?.message ?? t('invoices.couldNotSave'));
     } finally {
@@ -108,8 +167,8 @@ export default function NewPurchase() {
   };
 
   return (
-    <Screen padded>
-      <Header title={t('invoices.newPurchase')} showBack />
+    <Screen padded scroll>
+      <Header title={isEditing ? t('invoices.editPurchase') : t('invoices.newPurchase')} showBack />
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 32 }}>
         <Select
           label={t('invoices.supplier')}
@@ -130,7 +189,7 @@ export default function NewPurchase() {
           value={invoiceNumber}
           onChangeText={setInvoiceNumber}
         />
-        <Text className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+        <Text className="mb-2 text-sm font-semibold text-card-foreground">
           {t('invoices.items')}
         </Text>
         {items.map((i, idx) => (
@@ -140,6 +199,8 @@ export default function NewPurchase() {
             quantity={i.quantity}
             unit_price={i.unit_price}
             discount={i.discount}
+            unit_id={i.unit_id}
+            availableUnits={i.availableUnits}
             currency={store?.currency}
             onChange={(patch) =>
               setItems((prev) =>
@@ -153,20 +214,20 @@ export default function NewPurchase() {
         ))}
         <Pressable
           onPress={() => setPickerOpen(true)}
-          className="mb-3 flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-4 dark:border-slate-600"
+          className="mb-3 flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-border py-4"
         >
-          <Ionicons name="add" size={18} color="#2563eb" />
-          <Text className="font-semibold text-brand-700 dark:text-brand-300">
+          <Ionicons name="add" size={18} color="var(--primary)" />
+          <Text className="font-semibold text-primary">
             {t('invoices.addProduct')}
           </Text>
         </Pressable>
-        <Card>
+        <Card className="bg-card border-border">
           <View className="flex-row justify-between">
-            <Text className="text-slate-500">{t('invoices.subtotal')}</Text>
-            <Text className="font-semibold">{formatMoney(subtotal, store?.currency)}</Text>
+            <Text className="text-muted-foreground">{t('invoices.subtotal')}</Text>
+            <Text className="font-semibold text-card-foreground">{formatMoney(subtotal, store?.currency)}</Text>
           </View>
           <View className="mt-2 flex-row items-center gap-2">
-            <Text className="flex-1 text-slate-500">{t('invoices.invoiceDiscount')}</Text>
+            <Text className="flex-1 text-muted-foreground">{t('invoices.invoiceDiscount')}</Text>
             <Input
               containerClassName="w-32 mb-0"
               keyboardType="decimal-pad"
@@ -175,7 +236,7 @@ export default function NewPurchase() {
             />
           </View>
           <View className="mt-2 flex-row items-center gap-2">
-            <Text className="flex-1 text-slate-500">{t('invoices.paid')}</Text>
+            <Text className="flex-1 text-muted-foreground">{t('invoices.paid')}</Text>
             <Input
               containerClassName="w-32 mb-0"
               keyboardType="decimal-pad"
@@ -183,8 +244,8 @@ export default function NewPurchase() {
               onChangeText={setPaid}
             />
           </View>
-          <View className="mt-3 flex-row justify-between border-t border-slate-200 pt-3 dark:border-slate-700">
-            <Text className="text-base font-bold">{t('invoices.total')}</Text>
+          <View className="mt-3 flex-row justify-between border-t border-border pt-3">
+            <Text className="text-base font-bold text-card-foreground">{t('invoices.total')}</Text>
             <Text className="text-xl font-bold text-emerald-600">
               {formatMoney(total, store?.currency)}
             </Text>

@@ -42,10 +42,26 @@ export const SalesRepo = {
       p_paid: Number(input.paid ?? 0),
       p_notes: input.notes ?? null,
       p_items: input.items as any,
-    });
+    } as any);
     if (error) throw error;
     const full = await SalesRepo.get(String(invId));
     if (!full) throw new Error('Invoice created but not retrievable');
+    return full;
+  },
+
+  async update(id: string, input: SalesInvoiceInput): Promise<FullSalesInvoice> {
+    const { error } = await sb().rpc('update_sale_invoice' as any, {
+      p_invoice_id: id,
+      p_customer_id: input.customer_id ?? null,
+      p_invoice_number: input.invoice_number ?? null,
+      p_discount: Number(input.discount ?? 0),
+      p_paid: Number(input.paid ?? 0),
+      p_notes: input.notes ?? null,
+      p_items: input.items as any,
+    });
+    if (error) throw error;
+    const full = await SalesRepo.get(id);
+    if (!full) throw new Error('Invoice updated but not retrievable');
     return full;
   },
 

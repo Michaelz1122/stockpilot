@@ -28,25 +28,25 @@ export function ProductPicker({ visible, products, onClose, onPick, currency }: 
       <Pressable className="flex-1 justify-end bg-black/40" onPress={onClose}>
         <Pressable
           onPress={(e) => e.stopPropagation()}
-          className="max-h-[80%] rounded-t-3xl bg-white p-4 dark:bg-slate-900"
+          className="max-h-[80%] rounded-t-3xl bg-card p-4"
         >
           <View className="mb-3 flex-row items-center justify-between">
-            <Text className="text-lg font-bold text-slate-900 dark:text-slate-50">
+            <Text className="text-lg font-bold text-card-foreground">
               {t('invoices.addProduct')}
             </Text>
             <Pressable onPress={onClose}>
-              <Ionicons name="close" size={22} color="#64748b" />
+              <Ionicons name="close" size={22} color="var(--muted-foreground)" />
             </Pressable>
           </View>
-          <View className="mb-3 flex-row items-center rounded-xl border border-slate-200 px-3 dark:border-slate-700">
-            <Ionicons name="search" size={16} color="#94a3b8" />
+          <View className="mb-3 flex-row items-center rounded-xl border border-border px-3 bg-secondary">
+            <Ionicons name="search" size={16} color="var(--muted-foreground)" />
             <TextInput
               autoFocus
               value={q}
               onChangeText={setQ}
               placeholder={t('common.search')}
-              placeholderTextColor="#94a3b8"
-              className="ms-2 flex-1 py-2 text-slate-900 dark:text-slate-100"
+              placeholderTextColor="var(--muted-foreground)"
+              className="ms-2 flex-1 py-2 text-secondary-foreground"
             />
           </View>
           <FlatList
@@ -59,16 +59,21 @@ export function ProductPicker({ visible, products, onClose, onPick, currency }: 
                   onPick(item);
                   onClose();
                 }}
-                className="mb-1 flex-row items-center justify-between rounded-xl bg-slate-50 px-3 py-3 active:bg-slate-200 dark:bg-slate-800 dark:active:bg-slate-700"
+                className="mb-2 flex-row items-center justify-between rounded-xl border border-border bg-card px-3 py-3 active:bg-secondary"
               >
                 <View className="flex-1 pe-3">
-                  <Text
-                    className="text-base font-semibold text-slate-900 dark:text-slate-100"
-                    numberOfLines={1}
-                  >
-                    {item.name}
-                  </Text>
-                  <Text className="text-xs text-slate-500">
+                  <View className="flex-row items-center">
+                    <Text
+                      className="text-base font-semibold text-card-foreground"
+                      numberOfLines={1}
+                    >
+                      {item.name}
+                    </Text>
+                    {item.is_favorite && (
+                      <Ionicons name="star" size={12} color="#eab308" className="ml-1" />
+                    )}
+                  </View>
+                  <Text className="text-xs text-muted-foreground mt-0.5">
                     {item.sku ? `${t('products.sku')} ${item.sku} · ` : ''}
                     {t('ai.stockSuffix', { n: formatNumber(item.current_stock ?? 0) })}
                   </Text>
@@ -79,7 +84,7 @@ export function ProductPicker({ visible, products, onClose, onPick, currency }: 
               </Pressable>
             )}
             ListEmptyComponent={
-              <Text className="py-6 text-center text-slate-500">{t('common.noResults')}</Text>
+              <Text className="py-6 text-center text-muted-foreground">{t('common.noResults')}</Text>
             }
           />
         </Pressable>

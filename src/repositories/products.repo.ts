@@ -1,4 +1,4 @@
-import type { Product } from '@/lib/types';
+import type { Product, ProductUnit } from '@/lib/types';
 import { sb } from './base';
 
 export const ProductsRepo = {
@@ -15,10 +15,11 @@ export const ProductsRepo = {
     })) as Product[];
   },
 
-  async search(storeId: string, q: string): Promise<Product[]> {
+  async search(storeId: string, q: string, sortBy: string = 'relevance'): Promise<Product[]> {
     const { data, error } = await sb().rpc('search_products', {
       p_store_id: storeId,
       p_query: q,
+      p_sort_by: sortBy,
     });
     if (error) throw error;
     return (data ?? []) as unknown as Product[];
@@ -34,7 +35,48 @@ export const ProductsRepo = {
     return (data ?? null) as Product | null;
   },
 
-  async create(storeId: string, input: Partial<Product> & { opening_stock?: number }): Promise<Product> {
+  async getUnits(productId: string): Promise<ProductUnit[]> {
+    const { data, error } = await sb()
+      .from('product_units')
+      .select('*')
+      .eq('product_id', productId)
+      .order('created_at', { ascending: true });
+    if (error) throw error;
+    return data as ProductUnit[];
+  },
+
+  async syncUnits(productId: string, unitNames: string[]): Promise<void> {
+    if (!unitNames || unitNames.length === 0) return;
+    
+    // Simplistic sync: in a real app, you might want to delete missing units
+    // but here we just insert missing ones ignoring duplicates.
+    for (const name of unitNames) {
+      if (!name.trim()) continue;
+      const { error } = await sb()
+        .from('product_units')
+        .insert({ product_id: productId, name: name.trim() });
+      // ignore unique constraint violation error (code 23505)
+      if (error && error.code !== '23505') throw error;
+    }
+  },
+
+  async toggleFavorite(id: string, isFavorite: boolean): Promise<void> {
+    const { error } = await sb()
+      .from('products')
+      .update({ is_favorite: isFavorite })
+      .eq('id', id);
+    if (error) throw error;
+  },
+
+  async markRecentlyUsed(id: string): Promise<void> {
+    const { error } = await sb()
+      .from('products')
+      .update({ recently_used_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) throw error;
+  },
+
+  async create(storeId: string, input: Partial<Product> & { opening_stock?: number, units?: string[] }): Promise<Product> {
     const { data, error } = await sb()
       .from('products')
       .insert({
@@ -47,6 +89,7 @@ export const ProductsRepo = {
         purchase_price: Number(input.purchase_price ?? 0),
         sale_price: Number(input.sale_price ?? 0),
         minimum_stock: Number(input.minimum_stock ?? 0),
+        is_favorite: input.is_favorite ?? false,
       })
       .select()
       .single();
@@ -66,12 +109,16 @@ export const ProductsRepo = {
       if (invErr) throw invErr;
     }
 
+    if (input.units && input.units.length > 0) {
+      await this.syncUnits(data.id, input.units);
+    }
+
     return data as Product;
   },
 
-  async update(id: string, patch: Partial<Product>): Promise<Product> {
+  async update(id: string, patch: Partial<Product> & { units?: string[] }): Promise<Product> {
     // strip computed columns and opening_stock (since it's not a table column)
-    const { current_stock: _cs, search_blob: _sb, opening_stock: _os, ...rest } = patch as any;
+    const { current_stock: _cs, search_blob: _sb, opening_stock: _os, units, ...rest } = patch as any;
     const { data, error } = await sb()
       .from('products')
       .update(rest)
@@ -79,6 +126,11 @@ export const ProductsRepo = {
       .select()
       .single();
     if (error) throw error;
+
+    if (units) {
+      await this.syncUnits(id, units);
+    }
+
     return data as Product;
   },
 
@@ -103,5 +155,13 @@ export const ProductsRepo = {
     const { error, data } = await sb().from('products').insert(payload).select('id');
     if (error) throw error;
     return data?.length ?? 0;
+  },
+
+  async merge(primaryId: string, secondaryId: string): Promise<void> {
+    const { error } = await sb().rpc('merge_products' as any, {
+      p_primary_id: primaryId,
+      p_secondary_id: secondaryId,
+    });
+    if (error) throw error;
   },
 };
