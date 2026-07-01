@@ -176,7 +176,7 @@ export default function SupplierDetail() {
             >
               <View>
                 <Text className="font-semibold text-card-foreground">
-                  {lang === 'ar' ? 'إيصال دفع' : 'Payment Receipt'} #{item.id.slice(0, 8)}
+                  {lang === 'ar' ? 'إيصال دفع' : 'Payment Receipt'} #{item.id?.slice(0, 8) ?? '---'}
                 </Text>
                 <Text className="text-xs text-muted-foreground">{formatDate(item.payment_date)}</Text>
               </View>

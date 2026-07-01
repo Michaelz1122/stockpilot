@@ -11,12 +11,16 @@ export function formatNumber(value: number): string {
   return value.toLocaleString();
 }
 
-export function formatDate(iso: string | Date): string {
+export function formatDate(iso: string | Date | null | undefined): string {
+  if (!iso) return '';
   const d = typeof iso === 'string' ? new Date(iso) : iso;
+  if (isNaN(d.getTime())) return '';
   return d.toLocaleDateString();
 }
 
-export function formatDateTime(iso: string | Date): string {
+export function formatDateTime(iso: string | Date | null | undefined): string {
+  if (!iso) return '';
   const d = typeof iso === 'string' ? new Date(iso) : iso;
+  if (isNaN(d.getTime())) return '';
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 }

@@ -183,7 +183,7 @@ export default function CustomerDetail() {
             >
               <View>
                 <Text className="font-semibold text-foreground">
-                  {lang === 'ar' ? 'إيصال استلام' : 'Receipt'} #{item.id.slice(0, 8)}
+                  {lang === 'ar' ? 'إيصال استلام' : 'Receipt'} #{item.id?.slice(0, 8) ?? '---'}
                 </Text>
                 <Text className="text-xs text-muted-foreground">{formatDate(item.payment_date)}</Text>
               </View>
