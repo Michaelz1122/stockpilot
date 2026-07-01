@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { TextInput, View, Text, ActivityIndicator } from 'react-native';
+import { TextInput, View, Text, ActivityIndicator, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocale } from '@/hooks/useLocale';
 
@@ -10,11 +10,10 @@ interface Props {
 }
 
 export function NotesEditor({ initialNotes, onSave, placeholder }: Props) {
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const [notes, setNotes] = useState(initialNotes || '');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(true);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync initial state if it changes externally
   useEffect(() => {
@@ -24,39 +23,19 @@ export function NotesEditor({ initialNotes, onSave, placeholder }: Props) {
 
   const handleChange = (text: string) => {
     setNotes(text);
-    setSaved(false);
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(async () => {
-      setSaving(true);
-      try {
-        await onSave(text);
-        setSaved(true);
-      } catch (err) {
-        console.error('Failed to save notes:', err);
-      } finally {
-        setSaving(false);
-      }
-    }, 2000);
+    setSaved(text === (initialNotes || ''));
   };
 
-  const handleBlur = async () => {
-    if (!saved && !saving) {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-      setSaving(true);
-      try {
-        await onSave(notes);
-        setSaved(true);
-      } catch (err) {
-        console.error('Failed to save notes on blur:', err);
-      } finally {
-        setSaving(false);
-      }
+  const handleSave = async () => {
+    if (saving || saved) return;
+    setSaving(true);
+    try {
+      await onSave(notes);
+      setSaved(true);
+    } catch (err) {
+      console.error('Failed to save notes:', err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -69,19 +48,25 @@ export function NotesEditor({ initialNotes, onSave, placeholder }: Props) {
         <View className="flex-row items-center">
           {saving ? (
             <ActivityIndicator size="small" color="#475569" className="text-muted-foreground" />
-          ) : saved && notes !== initialNotes ? (
-            <Ionicons name="checkmark" size={16} color="#0284C7" className="text-primary" />
+          ) : !saved ? (
+            <Pressable
+              onPress={handleSave}
+              className="rounded-lg bg-primary px-3 py-1 active:opacity-80"
+            >
+              <Text className="text-xs font-bold text-primary-foreground">
+                {lang === 'ar' ? 'حفظ' : 'Save'}
+              </Text>
+            </Pressable>
           ) : null}
         </View>
       </View>
       <TextInput
         value={notes}
         onChangeText={handleChange}
-        onBlur={handleBlur}
         multiline
         numberOfLines={4}
         placeholder={placeholder || (t('customer.notesPlaceholder') || 'Enter notes here...')}
-        placeholderTextcolor="#475569" className="text-muted-foreground"
+        placeholderTextColor="#9ca3af"
         className="text-sm text-secondary-foreground"
         style={{ minHeight: 80, textAlignVertical: 'top' }}
       />
