@@ -49,14 +49,14 @@ export default function ExportScreen() {
             async () => {
               const list = await ProductsRepo.list(storeId!);
               return list.map((p) => ({
-                name: p.name,
-                sku: p.sku ?? '',
-                barcode: p.barcode ?? '',
-                category: p.category ?? '',
-                purchase_price: p.purchase_price,
-                sale_price: p.sale_price,
-                minimum_stock: p.minimum_stock,
-                current_stock: p.current_stock ?? 0,
+                'الاسم': p.name,
+                'الكود': p.sku ?? '',
+                'الباركود': p.barcode ?? '',
+                'التصنيف': p.category ?? '',
+                'سعر الشراء': p.purchase_price,
+                'سعر البيع': p.sale_price,
+                'الحد الأدنى': p.minimum_stock,
+                'الرصيد': p.current_stock ?? 0,
               }));
             },
             'products.xlsx',
@@ -72,10 +72,10 @@ export default function ExportScreen() {
             async () => {
               const list = await CustomersRepo.list(storeId!);
               return list.map((c) => ({
-                name: c.name,
-                phone: c.phone ?? '',
-                address: c.address ?? '',
-                balance: c.balance ?? 0,
+                'الاسم': c.name,
+                'رقم الهاتف': c.phone ?? '',
+                'العنوان': c.address ?? '',
+                'الرصيد الافتتاحي': c.balance ?? 0,
               }));
             },
             'customers.xlsx',
@@ -91,10 +91,10 @@ export default function ExportScreen() {
             async () => {
               const list = await SuppliersRepo.list(storeId!);
               return list.map((s) => ({
-                name: s.name,
-                phone: s.phone ?? '',
-                address: s.address ?? '',
-                balance: s.balance ?? 0,
+                'الاسم': s.name,
+                'رقم الهاتف': s.phone ?? '',
+                'العنوان': s.address ?? '',
+                'الرصيد الافتتاحي': s.balance ?? 0,
               }));
             },
             'suppliers.xlsx',
@@ -110,12 +110,12 @@ export default function ExportScreen() {
             async () => {
               const list = await InventoryRepo.list(storeId!);
               return list.map((tx) => ({
-                date: tx.created_at,
-                product_id: tx.product_id,
-                type: tx.type,
-                quantity: tx.quantity,
-                unit_cost: tx.unit_cost,
-                note: tx.note ?? '',
+                'التاريخ': tx.created_at,
+                'معرف المنتج': tx.product_id,
+                'نوع الحركة': tx.type,
+                'الكمية': tx.quantity,
+                'التكلفة': tx.unit_cost,
+                'ملاحظات': tx.note ?? '',
               }));
             },
             'inventory.xlsx',
@@ -131,13 +131,13 @@ export default function ExportScreen() {
             async () => {
               const list = await SalesRepo.list(storeId!);
               return list.map((s) => ({
-                invoice_number: s.invoice_number ?? s.id,
-                date: s.invoice_date,
-                customer_id: s.customer_id ?? '',
-                subtotal: s.subtotal,
-                discount: s.discount,
-                total: s.total,
-                paid: s.paid,
+                'رقم الفاتورة': s.invoice_number ?? s.id,
+                'التاريخ': s.invoice_date,
+                'معرف العميل': s.customer_id ?? '',
+                'المجموع الفرعي': s.subtotal,
+                'الخصم': s.discount,
+                'الإجمالي': s.total,
+                'المدفوع': s.paid,
               }));
             },
             'sales.xlsx',
@@ -153,13 +153,13 @@ export default function ExportScreen() {
             async () => {
               const list = await PurchasesRepo.list(storeId!);
               return list.map((p) => ({
-                invoice_number: p.invoice_number ?? p.id,
-                date: p.invoice_date,
-                supplier_id: p.supplier_id ?? '',
-                subtotal: p.subtotal,
-                discount: p.discount,
-                total: p.total,
-                paid: p.paid,
+                'رقم الفاتورة': p.invoice_number ?? p.id,
+                'التاريخ': p.invoice_date,
+                'معرف المورد': p.supplier_id ?? '',
+                'المجموع الفرعي': p.subtotal,
+                'الخصم': p.discount,
+                'الإجمالي': p.total,
+                'المدفوع': p.paid,
               }));
             },
             'purchases.xlsx',
