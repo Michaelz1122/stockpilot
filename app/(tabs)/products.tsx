@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,6 +27,43 @@ export default function Products() {
     () => (storeId ? ProductsRepo.search(storeId, q, sortBy) : Promise.resolve([])),
     [storeId, q, sortBy],
   );
+
+  const keyExtractor = useCallback((item: any) => item.id, []);
+
+  const renderItem = useCallback(({ item }: any) => {
+    const tone =
+      Number(item.current_stock ?? 0) <= 0
+        ? 'danger'
+        : Number(item.current_stock ?? 0) <= Number(item.minimum_stock)
+          ? 'warning'
+          : 'success';
+    return (
+      <ListItem
+        title={item.name}
+        subtitle={`${item.sku ? `${t('products.sku')} ${item.sku} · ` : ''}${formatMoney(item.sale_price, store?.currency)}`}
+        leadingIcon={item.is_favorite ? 'star' : 'cube'}
+        leadingIconColor={item.is_favorite ? '#F59E0B' : undefined}
+        onPress={() => router.push(`/products/${item.id}`)}
+        right={
+          <View className="items-end">
+            <Text className="text-base font-bold text-card-foreground">
+              {formatNumber(item.current_stock ?? 0)}
+            </Text>
+            <Badge
+              label={
+                tone === 'danger'
+                  ? t('common.outOfStock')
+                  : tone === 'warning'
+                    ? t('common.lowStock')
+                    : t('common.inStock')
+              }
+              tone={tone}
+            />
+          </View>
+        }
+      />
+    );
+  }, [t, store?.currency, router]);
 
   return (
     <Screen padded>
@@ -83,7 +120,7 @@ export default function Products() {
 
       <FlatList
         data={products.data ?? []}
-        keyExtractor={(item) => item.id}
+        keyExtractor={keyExtractor}
         onRefresh={products.refresh}
         refreshing={products.loading}
         initialNumToRender={20}
@@ -102,40 +139,7 @@ export default function Products() {
           ) : null
         }
         ListFooterComponent={ListBottomSpacer}
-        renderItem={({ item }) => {
-          const tone =
-            Number(item.current_stock ?? 0) <= 0
-              ? 'danger'
-              : Number(item.current_stock ?? 0) <= Number(item.minimum_stock)
-                ? 'warning'
-                : 'success';
-          return (
-            <ListItem
-              title={item.name}
-              subtitle={`${item.sku ? `${t('products.sku')} ${item.sku} · ` : ''}${formatMoney(item.sale_price, store?.currency)}`}
-              leadingIcon={item.is_favorite ? 'star' : 'cube'}
-              leadingIconColor={item.is_favorite ? '#F59E0B' : undefined}
-              onPress={() => router.push(`/products/${item.id}`)}
-              right={
-                <View className="items-end">
-                  <Text className="text-base font-bold text-card-foreground">
-                    {formatNumber(item.current_stock ?? 0)}
-                  </Text>
-                  <Badge
-                    label={
-                      tone === 'danger'
-                        ? t('common.outOfStock')
-                        : tone === 'warning'
-                          ? t('common.lowStock')
-                          : t('common.inStock')
-                    }
-                    tone={tone}
-                  />
-                </View>
-              }
-            />
-          );
-        }}
+        renderItem={renderItem}
       />
     </Screen>
   );

@@ -5,6 +5,7 @@ import type { Product } from '@/lib/types';
 import { formatMoney, formatNumber } from '@/lib/format';
 import { matchesAny } from '@/lib/arabic';
 import { useLocale } from '@/hooks/useLocale';
+import { SearchBar } from '@/components/ui/SearchBar';
 
 interface Props {
   visible: boolean;
@@ -39,14 +40,12 @@ export function ProductPicker({ visible, products, onClose, onPick, currency }: 
             </Pressable>
           </View>
           <View className="mb-3 flex-row items-center rounded-xl border border-border px-3 bg-secondary">
-            <Ionicons name="search" size={16} color="var(--muted-foreground)" />
-            <TextInput
-              autoFocus
+            <SearchBar
               value={q}
               onChangeText={setQ}
-              placeholder={t('common.search')}
-              placeholderTextColor="var(--muted-foreground)"
-              className="ms-2 flex-1 py-2 text-secondary-foreground"
+              placeholder={t('products.searchPlaceholder')}
+              containerClassName="mb-0 flex-1"
+              autoFocus
             />
           </View>
           <FlatList

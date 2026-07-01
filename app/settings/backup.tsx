@@ -31,19 +31,39 @@ export default function BackupScreen() {
     setImporting(true);
     try {
       const data = await BackupService.pickAndReadBackup();
-      // For now we just alert that it's read successfully
+      
       Alert.alert(
-        lang === 'ar' ? 'تم قراءة الملف' : 'File Read Success',
-        lang === 'ar' 
-          ? `تم العثور على نسخة احتياطية من تاريخ ${new Date(data.timestamp).toLocaleDateString()}\n(ميزة الاستعادة قيد التطوير)`
-          : `Found backup from ${new Date(data.timestamp).toLocaleDateString()}\n(Restore feature is in development)`
+        lang === 'ar' ? 'تحذير مهم!' : 'Warning!',
+        lang === 'ar'
+          ? `سيتم استبدال بيانات المتجر الحالي بالنسخة الاحتياطية من تاريخ ${new Date(data.timestamp).toLocaleDateString()}.\nهل أنت متأكد؟`
+          : `Current store data will be overwritten with the backup from ${new Date(data.timestamp).toLocaleDateString()}.\nAre you sure?`,
+        [
+          { text: lang === 'ar' ? 'إلغاء' : 'Cancel', style: 'cancel', onPress: () => setImporting(false) },
+          {
+            text: lang === 'ar' ? 'استعادة البيانات' : 'Restore Data',
+            style: 'destructive',
+            onPress: async () => {
+              if (!storeId) return;
+              try {
+                await BackupService.restoreBackup(storeId, data);
+                Alert.alert(
+                  lang === 'ar' ? 'نجاح' : 'Success',
+                  lang === 'ar' ? 'تم استعادة البيانات بنجاح' : 'Data restored successfully'
+                );
+              } catch (e: any) {
+                Alert.alert(t('common.error'), e?.message || 'Restore failed');
+              } finally {
+                setImporting(false);
+              }
+            }
+          }
+        ]
       );
     } catch (err: any) {
       if (err.message !== 'Canceled') {
         console.error(err);
         Alert.alert(t('common.error'), err.message || 'Import failed');
       }
-    } finally {
       setImporting(false);
     }
   };

@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -875,6 +875,10 @@ export type Database = {
         Returns: undefined
       }
       normalize_arabic: { Args: { input: string }; Returns: string }
+      restore_data: {
+        Args: { p_data: Json; p_store_id: string }
+        Returns: undefined
+      }
       sales_by_period: {
         Args: { p_period: string; p_store_id: string }
         Returns: {
@@ -1119,3 +1123,4 @@ export const Constants = {
     },
   },
 } as const
+

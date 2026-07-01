@@ -128,5 +128,17 @@ export const BackupService = {
     } catch (e) {
       throw new Error('Failed to parse backup file');
     }
+  },
+
+  async restoreBackup(storeId: string, backupData: BackupData): Promise<void> {
+    const { error } = await sb().rpc('restore_data', {
+      p_store_id: storeId,
+      p_data: backupData.data,
+    });
+
+    if (error) {
+      console.error('Restore Error:', error);
+      throw new Error(error.message || 'Failed to restore data');
+    }
   }
 };

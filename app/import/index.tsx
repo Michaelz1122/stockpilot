@@ -123,6 +123,7 @@ export default function ImportWizard() {
       } else if (entity === 'inventory') {
         const products = await ProductsRepo.list(storeId);
         const bySku = new Map(products.map((p) => [p.sku ?? '', p]));
+        const batch = [];
         for (const row of valid) {
           const product = bySku.get(row.sku);
           if (!product) {
@@ -131,24 +132,29 @@ export default function ImportWizard() {
           }
           const typeRaw = String(row.type ?? 'IN').toUpperCase();
           const type = typeRaw === 'OUT' || typeRaw === 'ADJUSTMENT' ? typeRaw : 'IN';
-          await InventoryRepo.create(storeId, {
+          batch.push({
             product_id: product.id,
             type: type as any,
             quantity: Number(row.quantity),
             unit_cost: Number(row.unit_cost ?? product.purchase_price),
             note: row.note ?? null,
           });
-          n++;
         }
+        n = await InventoryRepo.bulkInsert(storeId, batch);
       } else if (entity === 'price_list') {
         const products = await ProductsRepo.list(storeId);
         const bySku = new Map(products.map((p) => [p.sku ?? '', p]));
+        const chunks = [];
         for (const row of valid) {
           const product = bySku.get(row.sku);
           if (!product) continue;
-          await ProductsRepo.update(product.id, { sale_price: Number(row.sale_price) });
-          n++;
+          chunks.push(ProductsRepo.update(product.id, { sale_price: Number(row.sale_price) }));
         }
+        // Run in batches of 50 to avoid network congestion
+        for (let i = 0; i < chunks.length; i += 50) {
+          await Promise.all(chunks.slice(i, i + 50));
+        }
+        n = chunks.length;
       }
       setImported(n);
       setStep('done');

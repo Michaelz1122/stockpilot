@@ -60,7 +60,7 @@ export function Button({
       {...rest}
     >
       {loading ? (
-        <ActivityIndicator color="#fff" />
+        <ActivityIndicator color={variant === 'primary' || variant === 'danger' ? '#fff' : '#64748b'} />
       ) : (
         <View className="flex-row items-center justify-center gap-2">
           {leftIcon}
