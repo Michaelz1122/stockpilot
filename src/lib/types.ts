@@ -107,6 +107,7 @@ export interface SalesInvoice {
   paid: number;
   notes?: string | null;
   created_at: string;
+  customers?: { name: string } | null;
 }
 
 export interface SalesInvoiceItem {
@@ -133,6 +134,7 @@ export interface PurchaseInvoice {
   paid: number;
   notes?: string | null;
   created_at: string;
+  suppliers?: { name: string } | null;
 }
 
 export interface PurchaseInvoiceItem {

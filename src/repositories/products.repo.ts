@@ -15,11 +15,23 @@ export const ProductsRepo = {
     })) as Product[];
   },
 
-  async search(storeId: string, q: string, sortBy: string = 'relevance'): Promise<Product[]> {
+  async search(
+    storeId: string,
+    q: string,
+    sortBy: string = 'relevance',
+    limit?: number,
+    offset?: number,
+  ): Promise<Product[]> {
+    const hasQuery = q && q.trim().length > 0;
+    const finalLimit = hasQuery ? 1000 : (limit ?? 50);
+    const finalOffset = hasQuery ? 0 : (offset ?? 0);
+
     const { data, error } = await sb().rpc('search_products', {
       p_store_id: storeId,
       p_query: q,
       p_sort_by: sortBy,
+      p_limit: finalLimit,
+      p_offset: finalOffset,
     });
     if (error) throw error;
     return (data ?? []) as unknown as Product[];

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { Screen } from '@/components/ui/Screen';
@@ -50,8 +50,11 @@ export default function NewStore() {
   };
 
   return (
-    <Screen scroll>
-      <Header title={t('store.newStore')} subtitle={t('store.setupHint')} />
+    <Screen padded={false} scroll={false}>
+      <View className="px-4">
+        <Header title={t('store.newStore')} subtitle={t('store.setupHint')} />
+      </View>
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
       <Controller
         control={control}
         name="name"
@@ -90,11 +93,15 @@ export default function NewStore() {
           />
         )}
       />
-      <Button
-        title={t('common.save')}
-        loading={loading}
-        onPress={handleSubmit(submit)}
-      />
+      </ScrollView>
+
+      <View className="border-t border-border bg-card p-4 pb-6">
+        <Button
+          title={t('common.save')}
+          loading={loading}
+          onPress={handleSubmit(submit)}
+        />
+      </View>
     </Screen>
   );
 }

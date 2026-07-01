@@ -105,7 +105,7 @@ export default function ResetPassword() {
       <View className="mt-4">
         {step === 1 && (
           <>
-            <Text className="mb-4 text-slate-500 dark:text-slate-400">
+            <Text className="mb-4 text-muted-foreground">
               {lang === 'ar' 
                 ? 'أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور الخاصة بك.'
                 : 'Enter your email and we will send you a link to reset your password.'}
@@ -128,7 +128,7 @@ export default function ResetPassword() {
 
         {step === 2 && (
           <>
-            <Text className="mb-4 text-slate-500 dark:text-slate-400">
+            <Text className="mb-4 text-muted-foreground">
               {lang === 'ar' 
                 ? 'الرجاء إدخال كلمة المرور الجديدة.'
                 : 'Please enter your new password.'}

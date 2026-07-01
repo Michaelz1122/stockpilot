@@ -35,10 +35,6 @@ export default function NewPurchase() {
   const isEditing = !!editId;
   const { t, lang } = useLocale();
   const { storeId, store } = useActiveStore();
-  const products = useAsync(
-    () => (storeId ? ProductsRepo.search(storeId, '', 'relevance') : Promise.resolve([])),
-    [storeId],
-  );
   const suppliers = useAsync(
     () => (storeId ? SuppliersRepo.list(storeId) : Promise.resolve([])),
     [storeId],
@@ -167,9 +163,11 @@ export default function NewPurchase() {
   };
 
   return (
-    <Screen padded scroll>
-      <Header title={isEditing ? t('invoices.editPurchase') : t('invoices.newPurchase')} showBack />
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 32 }}>
+    <Screen padded={false} scroll={false}>
+      <View className="px-4">
+        <Header title={isEditing ? t('invoices.editPurchase') : t('invoices.newPurchase')} showBack />
+      </View>
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
         <Select
           label={t('invoices.supplier')}
           value={supplierId}
@@ -214,14 +212,14 @@ export default function NewPurchase() {
         ))}
         <Pressable
           onPress={() => setPickerOpen(true)}
-          className="mb-3 flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-border py-4"
+          className="mb-3 flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-border py-4 bg-card active:bg-secondary"
         >
           <Ionicons name="add" size={18} color="var(--primary)" />
           <Text className="font-semibold text-primary">
             {t('invoices.addProduct')}
           </Text>
         </Pressable>
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-border p-4 rounded-2xl shadow-sm">
           <View className="flex-row justify-between">
             <Text className="text-muted-foreground">{t('invoices.subtotal')}</Text>
             <Text className="font-semibold text-card-foreground">{formatMoney(subtotal, store?.currency)}</Text>
@@ -252,13 +250,17 @@ export default function NewPurchase() {
           </View>
         </Card>
         <Input label={t('invoices.notes')} containerClassName="mt-3" value={notes} onChangeText={setNotes} multiline numberOfLines={3} />
-        <Button title={t('invoices.savePurchase')} loading={saving} onPress={save} />
       </ScrollView>
+
+      <View className="border-t border-border bg-card p-4 pb-6">
+        <Button title={t('invoices.savePurchase')} loading={saving} onPress={save} />
+      </View>
+
       <ProductPicker
         visible={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onPick={addProduct}
-        products={products.data ?? []}
+        storeId={storeId ?? undefined}
         currency={store?.currency}
       />
     </Screen>

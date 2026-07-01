@@ -20,7 +20,7 @@ type Tab = 'sales' | 'purchases';
 
 export default function Invoices() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const { storeId, store } = useActiveStore();
   const [tab, setTab] = useState<Tab>('sales');
 
@@ -47,16 +47,16 @@ export default function Invoices() {
             key={tk}
             onPress={() => setTab(tk)}
             className={cn(
-              'flex-1 rounded-xl py-3',
+              'flex-1 rounded-xl py-3 border',
               tab === tk
-                ? 'bg-brand-600'
-                : 'bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60',
+                ? 'bg-brand-600 border-brand-600'
+                : 'bg-card border-border',
             )}
           >
             <Text
               className={cn(
                 'text-center font-semibold',
-                tab === tk ? 'text-white' : 'text-slate-900 dark:text-slate-100',
+                tab === tk ? 'text-white' : 'text-foreground',
               )}
             >
               {tk === 'sales' ? t('invoices.sales') : t('invoices.purchases')}
@@ -68,10 +68,10 @@ export default function Invoices() {
         onPress={() =>
           router.push(tab === 'sales' ? '/invoices/new-sale' : '/invoices/new-purchase')
         }
-        className="mb-3 flex-row items-center justify-center gap-2 rounded-xl bg-slate-900 py-3"
+        className="mb-3 flex-row items-center justify-center gap-2 rounded-xl bg-primary py-3 active:opacity-90"
       >
-        <Ionicons name="add-circle" size={18} color="#fff" />
-        <Text className="font-semibold text-white">
+        <Ionicons name="add-circle" size={18} color="var(--primary-foreground)" />
+        <Text className="font-semibold text-primary-foreground">
           {tab === 'sales' ? t('invoices.newSale') : t('invoices.newPurchase')}
         </Text>
       </Pressable>
@@ -98,10 +98,16 @@ export default function Invoices() {
         ListFooterComponent={ListBottomSpacer}
         renderItem={({ item }: any) => {
           const paidFull = Number(item.paid) >= Number(item.total);
+          const isAr = lang === 'ar';
+          const entityName = tab === 'sales'
+            ? (item.customers?.name ?? (isAr ? 'عميل نقدي' : 'Cash Customer'))
+            : (item.suppliers?.name ?? (isAr ? 'مورد نقدي' : 'Cash Supplier'));
+          const invoiceNum = item.invoice_number ?? `#${item.id.slice(0, 8)}`;
+
           return (
             <ListItem
-              title={item.invoice_number ?? `#${item.id.slice(0, 8)}`}
-              subtitle={formatDate(item.invoice_date)}
+              title={entityName}
+              subtitle={`${invoiceNum} · ${formatDate(item.invoice_date)}`}
               leadingIcon="document-text"
               onPress={() =>
                 router.push(
@@ -112,7 +118,7 @@ export default function Invoices() {
               }
               right={
                 <View className="items-end gap-1">
-                  <Text className="text-base font-bold text-slate-900 dark:text-slate-50">
+                  <Text className="text-base font-bold text-foreground">
                     {formatMoney(item.total, store?.currency)}
                   </Text>
                   <Badge

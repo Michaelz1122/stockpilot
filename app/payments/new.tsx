@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, Text, View, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
@@ -59,12 +59,15 @@ export default function NewPayment() {
     : (lang === 'ar' ? 'تسديد دفعة نقدية' : 'Make Payment');
 
   return (
-    <Screen padded scroll>
-      <Header title={title} showBack />
+    <Screen padded={false} scroll={false}>
+      <View className="px-4">
+        <Header title={title} showBack />
+      </View>
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
       
       <View className="mt-4">
         {entity.data && (
-          <Text className="mb-4 text-lg font-bold text-slate-900 dark:text-slate-50">
+          <Text className="mb-4 text-lg font-bold text-foreground">
             {lang === 'ar' ? 'إلى / من:' : 'To / From:'} {entity.data.name}
           </Text>
         )}
@@ -85,12 +88,14 @@ export default function NewPayment() {
           multiline
           numberOfLines={3}
         />
+      </View>
+    </ScrollView>
 
+      <View className="border-t border-border bg-card p-4 pb-6">
         <Button
           title={lang === 'ar' ? 'حفظ وإصدار إيصال' : 'Save & Print Receipt'}
           loading={loading}
           onPress={handleSave}
-          className="mt-6"
         />
       </View>
     </Screen>

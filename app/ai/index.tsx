@@ -207,11 +207,11 @@ Critical rules:
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <StatusBar style="auto" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={0}
       >
         <View className="px-4 pt-2">
@@ -220,21 +220,21 @@ Critical rules:
             subtitle={t('ai.provider', { name: env.AI_PROVIDER })}
             showBack
             right={
-              <Pressable onPress={clearHistory} className="h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+              <Pressable onPress={clearHistory} className="h-10 w-10 items-center justify-center rounded-full bg-secondary">
                 <Ionicons name="trash-outline" size={18} color="#ef4444" />
               </Pressable>
             }
           />
-          <View className="flex-row items-center justify-between py-2 border-b border-slate-200 dark:border-slate-800 mb-2">
-            <Text className="text-xs text-slate-500 dark:text-slate-400">النموذج النشط:</Text>
+          <View className="flex-row items-center justify-between py-2 border-b border-border mb-2">
+            <Text className="text-xs text-muted-foreground">{lang === 'ar' ? 'النموذج النشط:' : 'Active Model:'}</Text>
             <View className="flex-row gap-2">
               {['gemini-3.1-flash-lite', 'gemini-3.5-flash', 'gemini-2.5-flash'].map((m) => (
                 <Pressable
                   key={m}
                   onPress={() => setSelectedModel(m)}
-                  className={`px-2 py-1 rounded-md ${selectedModel === m ? 'bg-brand-100 dark:bg-brand-900/50' : 'bg-slate-100 dark:bg-slate-800'}`}
+                  className={`px-2 py-1 rounded-md ${selectedModel === m ? 'bg-brand-100 dark:bg-brand-900/50' : 'bg-secondary'}`}
                 >
-                  <Text className={`text-[10px] ${selectedModel === m ? 'text-brand-700 dark:text-brand-300 font-bold' : 'text-slate-600 dark:text-slate-400'}`}>
+                  <Text className={`text-[10px] ${selectedModel === m ? 'text-brand-700 dark:text-brand-300 font-bold' : 'text-muted-foreground'}`}>
                     {m.replace('gemini-', '')}
                   </Text>
                 </Pressable>
@@ -253,7 +253,7 @@ Critical rules:
               className={`mb-2 max-w-[85%] rounded-2xl px-4 py-3 ${
                 item.role === 'user'
                   ? 'self-end bg-brand-600'
-                  : 'self-start bg-white dark:bg-slate-800'
+                  : 'self-start bg-card border border-border'
               }`}
             >
               <Text
@@ -262,7 +262,7 @@ Critical rules:
                 className={
                   item.role === 'user'
                     ? 'text-white'
-                    : 'text-slate-900 dark:text-slate-50'
+                    : 'text-foreground'
                 }
               >
                 {item.content}
@@ -271,8 +271,8 @@ Critical rules:
           )}
           ListFooterComponent={
             sending ? (
-              <View className="my-2 self-start rounded-2xl bg-white px-4 py-3 dark:bg-slate-800">
-                <ActivityIndicator size="small" color="#2563eb" />
+              <View className="my-2 self-start rounded-2xl bg-card border border-border px-4 py-3">
+                <ActivityIndicator size="small" color="var(--primary)" />
               </View>
             ) : null
           }
@@ -283,9 +283,9 @@ Critical rules:
               <Pressable
                 key={s}
                 onPress={() => send(s)}
-                className="rounded-full bg-slate-200 px-3 py-1.5 dark:bg-slate-700"
+                className="rounded-full bg-secondary px-3 py-1.5"
               >
-                <Text className="text-xs font-semibold text-slate-800 dark:text-slate-100">
+                <Text className="text-xs font-semibold text-foreground">
                   {s}
                 </Text>
               </Pressable>
@@ -309,18 +309,18 @@ Critical rules:
           </View>
         )}
         <View
-          className="flex-row items-center gap-2 border-t border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900"
+          className="flex-row items-center gap-2 border-t border-border bg-card px-3 py-2"
           style={{ paddingBottom: Math.max(insets.bottom, 12) }}
         >
           <Pressable
             onPress={onAttach}
             disabled={pickingFile}
-            className="h-11 w-11 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800"
+            className="h-11 w-11 items-center justify-center rounded-full bg-secondary"
           >
             {pickingFile ? (
-              <ActivityIndicator size="small" color="#2563eb" />
+              <ActivityIndicator size="small" color="var(--primary)" />
             ) : (
-              <Ionicons name="attach" size={20} color="#475569" />
+              <Ionicons name="attach" size={20} color="var(--muted-foreground)" />
             )}
           </Pressable>
           <TextInput
@@ -329,7 +329,7 @@ Critical rules:
             placeholder={t('ai.placeholder')}
             placeholderTextColor="#94a3b8"
             style={{ writingDirection: isRTL ? 'rtl' : 'ltr' }}
-            className="flex-1 rounded-full bg-slate-100 px-4 py-3 text-slate-900 dark:bg-slate-800 dark:text-slate-100"
+            className="flex-1 rounded-full bg-secondary px-4 py-3 text-foreground"
             onSubmitEditing={() => send()}
             returnKeyType="send"
           />

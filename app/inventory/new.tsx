@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Screen } from '@/components/ui/Screen';
 import { Header } from '@/components/ui/Header';
@@ -65,8 +65,11 @@ export default function NewInventoryTx() {
   };
 
   return (
-    <Screen scroll>
-      <Header title={t('inventory.newTitle')} showBack />
+    <Screen padded={false} scroll={false}>
+      <View className="px-4">
+        <Header title={t('inventory.newTitle')} showBack />
+      </View>
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
       <Select
         label={t('inventory.product')}
         value={productId}
@@ -98,7 +101,11 @@ export default function NewInventoryTx() {
         onChangeText={setCost}
       />
       <Input label={t('inventory.note')} value={note} onChangeText={setNote} />
-      <Button title={t('common.save')} loading={loading} onPress={submit} />
+      </ScrollView>
+
+      <View className="border-t border-border bg-card p-4 pb-6">
+        <Button title={t('common.save')} loading={loading} onPress={submit} />
+      </View>
     </Screen>
   );
 }

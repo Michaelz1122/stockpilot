@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, View, ActivityIndicator, Pressable, Text } from 'react-native';
+import { Alert, View, ActivityIndicator, Pressable, Text, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
@@ -107,8 +107,11 @@ export default function NewProduct() {
   }
 
   return (
-    <Screen scroll>
-      <Header title={isEditing ? (lang === 'ar' ? 'تعديل الصنف' : 'Edit Product') : t('products.newTitle')} showBack />
+    <Screen padded={false} scroll={false}>
+      <View className="px-4">
+        <Header title={isEditing ? (lang === 'ar' ? 'تعديل الصنف' : 'Edit Product') : t('products.newTitle')} showBack />
+      </View>
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
       
       <Controller
         control={control}
@@ -308,7 +311,11 @@ export default function NewProduct() {
         }}
       />
 
-      <Button title={t('products.saveProduct')} loading={loading} onPress={handleSubmit(submit)} className="mt-4 mb-8" />
+      </ScrollView>
+      
+      <View className="border-t border-border bg-card p-4 pb-6">
+        <Button title={t('products.saveProduct')} loading={loading} onPress={handleSubmit(submit)} />
+      </View>
     </Screen>
   );
 }

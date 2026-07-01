@@ -10,7 +10,7 @@ export const SalesRepo = {
   async list(storeId: string): Promise<SalesInvoice[]> {
     const { data, error } = await sb()
       .from('sales_invoices')
-      .select('*')
+      .select('*, customers(name)')
       .eq('store_id', storeId)
       .order('invoice_date', { ascending: false });
     if (error) throw error;

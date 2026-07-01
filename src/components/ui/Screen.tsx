@@ -1,5 +1,5 @@
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Platform, ScrollView, View, type ScrollViewProps } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View, type ScrollViewProps } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { cn } from '@/lib/cn';
 
@@ -19,18 +19,23 @@ export function Screen({
 }: Props) {
   const Container: any = scroll ? ScrollView : View;
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <StatusBar style="auto" />
-      <Container
-        className={cn('flex-1', padded && 'px-4 pt-2', className)}
-        contentContainerStyle={
-          scroll ? { paddingBottom: TAB_BAR_HEIGHT + 32, flexGrow: 1 } : undefined
-        }
-        keyboardShouldPersistTaps={scroll ? 'handled' : undefined}
-        {...rest}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
       >
-        {children}
-      </Container>
+        <Container
+          className={cn('flex-1', padded && 'px-4 pt-2', className)}
+          contentContainerStyle={
+            scroll ? { paddingBottom: TAB_BAR_HEIGHT + 32, flexGrow: 1 } : undefined
+          }
+          keyboardShouldPersistTaps={scroll ? 'handled' : undefined}
+          {...rest}
+        >
+          {children}
+        </Container>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

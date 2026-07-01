@@ -36,10 +36,10 @@ export default function SignIn() {
         <View className="h-20 w-20 items-center justify-center rounded-3xl bg-brand-600">
           <Ionicons name="cube" size={36} color="#fff" />
         </View>
-        <Text className="mt-4 text-3xl font-bold text-slate-900 dark:text-slate-50">
+        <Text className="mt-4 text-3xl font-bold text-foreground">
           {t('app.name')}
         </Text>
-        <Text className="mt-2 text-center text-slate-500">{t('app.tagline')}</Text>
+        <Text className="mt-2 text-center text-muted-foreground">{t('app.tagline')}</Text>
       </View>
 
       <View className="mt-8">

@@ -10,7 +10,7 @@ export const PurchasesRepo = {
   async list(storeId: string): Promise<PurchaseInvoice[]> {
     const { data, error } = await sb()
       .from('purchase_invoices')
-      .select('*')
+      .select('*, suppliers(name)')
       .eq('store_id', storeId)
       .order('invoice_date', { ascending: false });
     if (error) throw error;

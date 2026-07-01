@@ -35,10 +35,6 @@ export default function NewSale() {
   const isEditing = !!editId;
   const { t, lang } = useLocale();
   const { storeId, store } = useActiveStore();
-  const products = useAsync(
-    () => (storeId ? ProductsRepo.search(storeId, '', 'relevance') : Promise.resolve([])),
-    [storeId],
-  );
   const customers = useAsync(
     () => (storeId ? CustomersRepo.list(storeId) : Promise.resolve([])),
     [storeId],
@@ -169,9 +165,11 @@ export default function NewSale() {
   const profit = total - totalCost;
 
   return (
-    <Screen padded scroll>
-      <Header title={isEditing ? t('invoices.editSale') : t('invoices.newSale')} showBack />
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 32 }}>
+    <Screen padded={false} scroll={false}>
+      <View className="px-4">
+        <Header title={isEditing ? t('invoices.editSale') : t('invoices.newSale')} showBack />
+      </View>
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
         <Select
           label={t('invoices.customer')}
           value={customerId}
@@ -217,7 +215,7 @@ export default function NewSale() {
         ))}
         <Pressable
           onPress={() => setPickerOpen(true)}
-          className="mb-3 flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-border py-4"
+          className="mb-3 flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-border py-4 bg-card active:bg-secondary"
         >
           <Ionicons name="add" size={18} color="var(--primary)" />
           <Text className="font-semibold text-primary">
@@ -225,7 +223,7 @@ export default function NewSale() {
           </Text>
         </Pressable>
 
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-border p-4 rounded-2xl shadow-sm">
           <View className="flex-row justify-between">
             <Text className="text-muted-foreground">{t('invoices.subtotal')}</Text>
             <Text className="font-semibold text-card-foreground">
@@ -280,14 +278,17 @@ export default function NewSale() {
           multiline
           numberOfLines={3}
         />
-
-        <Button title={t('invoices.saveInvoice')} loading={saving} onPress={save} />
       </ScrollView>
+      
+      <View className="border-t border-border bg-card p-4 pb-6">
+        <Button title={t('invoices.saveInvoice')} loading={saving} onPress={save} />
+      </View>
+
       <ProductPicker
         visible={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onPick={addProduct}
-        products={products.data ?? []}
+        storeId={storeId ?? undefined}
         currency={store?.currency}
       />
     </Screen>

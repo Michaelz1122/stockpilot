@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, View, ActivityIndicator } from 'react-native';
+import { Alert, View, ActivityIndicator, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { Screen } from '@/components/ui/Screen';
@@ -86,8 +86,11 @@ export default function NewSupplier() {
   }
 
   return (
-    <Screen scroll>
-      <Header title={isEditing ? (lang === 'ar' ? 'تعديل المورد' : 'Edit Supplier') : t('supplier.newTitle')} showBack />
+    <Screen padded={false} scroll={false}>
+      <View className="px-4">
+        <Header title={isEditing ? (lang === 'ar' ? 'تعديل المورد' : 'Edit Supplier') : t('supplier.newTitle')} showBack />
+      </View>
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
       <Controller control={control} name="name" render={({ field }) => (
         <Input label={t('customer.name')} value={field.value} onChangeText={field.onChange} />
       )} />
@@ -110,7 +113,11 @@ export default function NewSupplier() {
       <Controller control={control} name="notes" render={({ field }) => (
         <Input label={t('customer.notes')} value={field.value} onChangeText={field.onChange} multiline numberOfLines={3} />
       )} />
-      <Button title={t('common.save')} loading={loading} onPress={handleSubmit(submit)} />
+      </ScrollView>
+
+      <View className="border-t border-border bg-card p-4 pb-6">
+        <Button title={t('common.save')} loading={loading} onPress={handleSubmit(submit)} />
+      </View>
     </Screen>
   );
 }

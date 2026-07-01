@@ -19,7 +19,7 @@ export const Input = forwardRef<TextInput, Props>(function Input(
   return (
     <View className={cn('mb-4', containerClassName)}>
       {label && (
-        <Text className="mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-200">
+        <Text className="mb-1.5 text-sm font-medium text-foreground">
           {label}
         </Text>
       )}
@@ -29,11 +29,10 @@ export const Input = forwardRef<TextInput, Props>(function Input(
           placeholderTextColor="#94a3b8"
           secureTextEntry={isSecure}
           className={cn(
-            'rounded-xl border bg-white px-4 py-3 text-base text-slate-900',
-            'dark:bg-slate-800 dark:text-slate-100',
+            'rounded-xl border bg-card px-4 py-3 text-base text-foreground',
             error
               ? 'border-red-500'
-              : 'border-slate-200 dark:border-slate-700 focus:border-brand-500',
+              : 'border-border focus:border-brand-500',
             isPassword ? 'pr-12' : '',
             className,
           )}
