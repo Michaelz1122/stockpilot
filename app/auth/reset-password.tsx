@@ -21,31 +21,51 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // If the URL contains a PKCE code, exchange it for a session
-    if (params.code) {
-      setStep(2);
-      getSupabase().auth.exchangeCodeForSession(params.code).catch(err => {
-        console.error('Failed to exchange code for session:', err);
-      });
-      return;
-    }
+    const handleUrl = async (currentUrl: string | null) => {
+      if (!currentUrl) return;
 
-    if (!url) return;
-    if (url.includes('#access_token=')) {
-      const hash = url.split('#')[1];
-      if (hash) {
-        const parts = hash.split('&');
-        const hashParams = Object.fromEntries(parts.map(p => p.split('=')));
-        if (hashParams.access_token && hashParams.refresh_token) {
-          setStep(2);
-          getSupabase().auth.setSession({
-            access_token: hashParams.access_token,
-            refresh_token: hashParams.refresh_token,
-          });
+      // Handle Implicit Flow (hash fragment)
+      if (currentUrl.includes('#access_token=')) {
+        const hash = currentUrl.split('#')[1];
+        if (hash) {
+          const hashParams = Object.fromEntries(hash.split('&').map(p => p.split('=')));
+          if (hashParams.access_token && hashParams.refresh_token) {
+            setStep(2);
+            await getSupabase().auth.setSession({
+              access_token: hashParams.access_token,
+              refresh_token: hashParams.refresh_token,
+            });
+          }
+        }
+        return;
+      }
+
+      // Handle PKCE Flow (query parameters)
+      const parsed = Linking.parse(currentUrl);
+      const code = parsed.queryParams?.code || params.code;
+      
+      if (code && typeof code === 'string') {
+        setStep(2);
+        try {
+          await getSupabase().auth.exchangeCodeForSession(code);
+        } catch (err) {
+          console.error('Failed to exchange code for session:', err);
         }
       }
-    }
+    };
+
+    handleUrl(url);
   }, [url, params.code]);
+
+  // Also listen for auth state changes which Supabase triggers on recovery
+  useEffect(() => {
+    const { data: { subscription } } = getSupabase().auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setStep(2);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleSendLink = async () => {
     if (!email.trim()) return;
