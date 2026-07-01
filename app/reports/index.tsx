@@ -131,7 +131,7 @@ export default function Reports() {
             <ListItem
               title={item.key}
               right={
-                <Text className="font-bold">
+                <Text className="font-bold text-foreground">
                   {formatMoney(item.total, store?.currency)}
                 </Text>
               }
@@ -182,7 +182,7 @@ export default function Reports() {
               subtitle={item.customer.phone ?? ''}
               onPress={() => router.push(`/customers/${item.customer.id}`)}
               right={
-                <Text className="font-bold">
+                <Text className="font-bold text-foreground">
                   {formatMoney(item.total, store?.currency)}
                 </Text>
               }

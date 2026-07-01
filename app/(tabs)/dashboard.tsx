@@ -63,10 +63,10 @@ export default function Dashboard() {
             >
               <Ionicons name="warning" size={24} color="var(--destructive)" />
               <View className="flex-1">
-                <Text className="font-bold text-destructive">
+                <Text className="font-bold text-red-600 dark:text-red-400">
                   {lang === 'ar' ? 'تنبيه المخزون' : 'Stock Alert'}
                 </Text>
-                <Text className="text-sm text-destructive/80 mt-1">
+                <Text className="text-sm text-red-600/80 dark:text-red-300 mt-1">
                   {lang === 'ar' 
                     ? `يوجد ${summary.data.outOfStockCount} منتج نفذت كميته، و ${summary.data.lowStockCount} منتج قارب على النفاذ.`
                     : `You have ${summary.data.outOfStockCount} products out of stock, and ${summary.data.lowStockCount} low on stock.`}
