@@ -19,12 +19,10 @@ export default function RootLayout() {
   const { setStores, hydrate } = useAppStores();
   const hydrateSettings = useSettingsStore(s => s.hydrate);
   const [i18nReady, setI18nReady] = useState(false);
-  const [firstLaunch, setFirstLaunch] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const res = await initI18n();
-      setFirstLaunch(res.firstLaunch);
+      await initI18n();
       setI18nReady(true);
     })();
     init();
@@ -41,22 +39,28 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!i18nReady) return;
-    if (firstLaunch && segments[0] !== 'onboarding') {
-      router.replace('/onboarding/language');
-      return;
-    }
-    if (!ready) return;
-    const isAuthRoute = segments[0] === 'auth';
-    const isOnboarding = segments[0] === 'onboarding';
-    if (!user && !isAuthRoute && !isOnboarding) {
-      router.replace('/auth/sign-in');
-    }
-  }, [i18nReady, firstLaunch, ready, user, segments]);
+    (async () => {
+      const { AsyncStorage } = await import('@react-native-async-storage/async-storage');
+      const flagged = await AsyncStorage.getItem('sp.langInitialized');
+      if (!flagged && segments[0] !== 'onboarding') {
+        router.replace('/onboarding/language');
+        return;
+      }
+      if (!ready) return;
+      const isAuthRoute = segments[0] === 'auth';
+      const isOnboarding = segments[0] === 'onboarding';
+      if (!user && !isAuthRoute && !isOnboarding) {
+        router.replace('/auth/sign-in');
+      }
+    })();
+  }, [i18nReady, ready, user, segments]);
 
   useEffect(() => {
     if (!i18nReady || !ready || !user) return;
-    if (firstLaunch) return;
     (async () => {
+      const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
+      const flagged = await AsyncStorage.getItem('sp.langInitialized');
+      if (!flagged) return;
       try {
         const stores = await StoresRepo.list();
         setStores(stores);
@@ -73,7 +77,7 @@ export default function RootLayout() {
         console.warn('[stores]', err);
       }
     })();
-  }, [i18nReady, firstLaunch, ready, user]);
+  }, [i18nReady, ready, user]);
 
   if (!ready || !i18nReady) {
     return (

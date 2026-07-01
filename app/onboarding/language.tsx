@@ -27,9 +27,13 @@ export default function Onboarding() {
     try {
       const { requiresRestart } = await setLanguage(selected);
       if (requiresRestart) {
-        const Updates = await import('expo-updates');
-        await Updates.reloadAsync();
-        return;
+        try {
+          const Updates = await import('expo-updates');
+          await Updates.reloadAsync();
+          return; // Stop here if reload triggers successfully
+        } catch (reloadErr) {
+          console.warn('Failed to reload async:', reloadErr);
+        }
       }
       setStep('welcome');
     } catch (e: any) {
