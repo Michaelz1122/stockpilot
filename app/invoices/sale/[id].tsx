@@ -106,13 +106,13 @@ export default function SaleDetail() {
           style={{ backgroundColor: '#2563eb' }}>
           <View className="flex-row items-start justify-between">
             <View>
-              <Text className="text-xs uppercase tracking-wide text-brand-100">
+              <Text className="text-xs uppercase tracking-wide text-blue-100">
                 {store?.name ?? ''}
               </Text>
               <Text className="mt-1 text-2xl font-bold text-white">
                 {i.invoice_number ?? `#${i.id.slice(0, 8)}`}
               </Text>
-              <Text className="mt-1 text-xs text-brand-100">
+              <Text className="mt-1 text-xs text-blue-100">
                 {formatDate(i.invoice_date)}
               </Text>
             </View>
@@ -127,12 +127,12 @@ export default function SaleDetail() {
             </View>
           </View>
           <View className="mt-4 border-t border-brand-400/40 pt-3">
-            <Text className="text-xs text-brand-100">{t('invoices.customer')}</Text>
+            <Text className="text-xs text-blue-100">{t('invoices.customer')}</Text>
             <Text className="mt-0.5 text-base font-semibold text-white">
               {customer?.name ?? t('common.walkIn')}
             </Text>
             {!!customer?.phone && (
-              <Text className="text-xs text-brand-100">{customer.phone}</Text>
+              <Text className="text-xs text-blue-100">{customer.phone}</Text>
             )}
           </View>
         </View>
