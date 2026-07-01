@@ -80,7 +80,7 @@ export default function Reports() {
             <Text
               className={cn(
                 'text-center text-xs font-semibold',
-                view === v ? 'text-white' : 'text-card-foreground',
+                view === v ? 'text-primary-foreground' : 'text-card-foreground',
               )}
             >
               {viewLabel[v]}
@@ -114,7 +114,7 @@ export default function Reports() {
                     <Text
                       className={cn(
                         'text-center text-xs font-semibold',
-                        period === p ? 'text-white' : 'text-secondary-foreground',
+                        period === p ? 'text-primary-foreground' : 'text-secondary-foreground',
                       )}
                     >
                       {t(`reports.period.${p}`)}
@@ -138,7 +138,7 @@ export default function Reports() {
             />
           )}
           ListEmptyComponent={
-            <Text className="mt-2 text-sm text-slate-500">{t('reports.noData')}</Text>
+            <Text className="mt-2 text-sm text-muted-foreground">{t('reports.noData')}</Text>
           }
         />
       )}

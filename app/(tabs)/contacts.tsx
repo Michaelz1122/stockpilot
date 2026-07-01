@@ -64,7 +64,7 @@ export default function Contacts() {
             <Text
               className={cn(
                 'text-center font-semibold',
-                tab === tk ? 'text-white' : 'text-card-foreground',
+                tab === tk ? 'text-primary-foreground' : 'text-card-foreground',
               )}
             >
               {tk === 'customers' ? t('contacts.customers') : t('contacts.suppliers')}
@@ -80,7 +80,7 @@ export default function Contacts() {
         className="mb-3 flex-row items-center justify-center gap-2 rounded-xl bg-brand-600 py-3"
       >
         <Ionicons name="person-add" size={18} color="#fff" />
-        <Text className="font-semibold text-white">
+        <Text className="font-semibold text-primary-foreground">
           {tab === 'customers' ? t('contacts.addCustomer') : t('contacts.addSupplier')}
         </Text>
       </Pressable>
@@ -128,7 +128,7 @@ export default function Contacts() {
                   'text-base font-bold',
                   Number(item.balance ?? 0) > 0
                     ? 'text-amber-600 dark:text-amber-400'
-                    : 'text-slate-700 dark:text-slate-200',
+                    : 'text-foreground',
                 )}
               >
                 {formatMoney(item.balance ?? 0, store?.currency)}

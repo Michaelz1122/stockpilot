@@ -183,7 +183,7 @@ export default function ImportWizard() {
                 }`}
               >
                 <Text
-                  className={`text-xs font-bold ${step === s ? 'text-white' : 'text-slate-600 dark:text-slate-300'}`}
+                  className={`text-xs font-bold ${step === s ? 'text-primary-foreground' : 'text-muted-foreground'}`}
                 >
                   {i + 1}
                 </Text>
@@ -214,15 +214,15 @@ export default function ImportWizard() {
             >
               {autoDetect && <Ionicons name="checkmark" size={14} color="#fff" />}
             </View>
-            <Text className="text-sm text-slate-700 dark:text-slate-200">
+            <Text className="text-sm text-foreground">
               {t('import.smart.autoDetectEntity')}
             </Text>
           </Pressable>
           <Card className="mb-3">
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            <Text className="text-sm font-semibold text-foreground">
               {t('import.expectedCols')}
             </Text>
-            <Text className="mt-1 text-xs text-slate-500">{t('import.expectedHint')}</Text>
+            <Text className="mt-1 text-xs text-muted-foreground">{t('import.expectedHint')}</Text>
             <View className="mt-2 flex-row flex-wrap gap-1">
               {SCHEMAS[entity].map((f) => (
                 <Badge
@@ -244,10 +244,10 @@ export default function ImportWizard() {
       {step === 'preview' && sheet && (
         <View>
           <Card>
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            <Text className="text-sm font-semibold text-foreground">
               {preview!.fileName}
             </Text>
-            <Text className="mt-1 text-xs text-slate-500">
+            <Text className="mt-1 text-xs text-muted-foreground">
               {t(preview!.sheets.length === 1 ? 'import.sheets_one' : 'import.sheets_other', {
                 count: preview!.sheets.length,
               })}
@@ -267,7 +267,7 @@ export default function ImportWizard() {
                 >
                   <Text
                     className={`text-xs font-semibold ${
-                      i === sheetIdx ? 'text-white' : 'text-slate-700 dark:text-slate-200'
+                      i === sheetIdx ? 'text-primary-foreground' : 'text-foreground'
                     }`}
                   >
                     {s.name}
@@ -284,7 +284,7 @@ export default function ImportWizard() {
                   {sheet.headers.map((h) => (
                     <Text
                       key={h}
-                      className="min-w-[120px] border-b border-slate-200 px-2 py-1 text-xs font-bold text-slate-700 dark:border-slate-700 dark:text-slate-200"
+                      className="min-w-[120px] border-b border-border px-2 py-1 text-xs font-bold text-foreground"
                     >
                       {h}
                     </Text>
@@ -296,7 +296,7 @@ export default function ImportWizard() {
                       <Text
                         key={h}
                         numberOfLines={1}
-                        className="min-w-[120px] px-2 py-1 text-xs text-slate-600 dark:text-slate-300"
+                        className="min-w-[120px] px-2 py-1 text-xs text-muted-foreground"
                       >
                         {String(r[h] ?? '')}
                       </Text>
@@ -331,10 +331,10 @@ export default function ImportWizard() {
                   <Ionicons name="sparkles" size={18} color="#2563eb" />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-sm font-bold text-slate-900 dark:text-slate-50">
+                  <Text className="text-sm font-bold text-foreground">
                     {t('import.smart.mappingReady')}
                   </Text>
-                  <Text className="text-xs text-slate-500">
+                  <Text className="text-xs text-muted-foreground">
                     {t('import.smart.confidence', {
                       percent: Math.round(aiConfidence * 100),
                     })}
@@ -342,7 +342,7 @@ export default function ImportWizard() {
                 </View>
               </View>
               {!!aiNotes && (
-                <Text className="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                <Text className="mt-2 text-xs text-muted-foreground">
                   {aiNotes}
                 </Text>
               )}
@@ -351,7 +351,7 @@ export default function ImportWizard() {
                   {t('import.smart.unmappedColumns', { cols: aiUnmapped.join(', ') })}
                 </Text>
               )}
-              <Text className="mt-2 text-xs text-slate-500">
+              <Text className="mt-2 text-xs text-muted-foreground">
                 {t('import.smart.reviewHint')}
               </Text>
             </Card>
@@ -410,7 +410,7 @@ export default function ImportWizard() {
             <View className="h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
               <Ionicons name="checkmark" size={28} color="#059669" />
             </View>
-            <Text className="mt-3 text-lg font-bold text-slate-900 dark:text-slate-50">
+            <Text className="mt-3 text-lg font-bold text-foreground">
               {t('import.importedN', { count: imported })}
             </Text>
             {errors.length > 0 && (

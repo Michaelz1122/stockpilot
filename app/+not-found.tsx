@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <Screen>
       <View className="flex-1 items-center justify-center">
-        <Text className="text-xl font-bold text-slate-900 dark:text-slate-50">
+        <Text className="text-xl font-bold text-foreground">
           {t('common.notFound')}
         </Text>
         <Link href="/" className="mt-4 text-brand-700 dark:text-brand-300">

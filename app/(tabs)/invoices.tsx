@@ -56,7 +56,7 @@ export default function Invoices() {
             <Text
               className={cn(
                 'text-center font-semibold',
-                tab === tk ? 'text-white' : 'text-foreground',
+                tab === tk ? 'text-primary-foreground' : 'text-foreground',
               )}
             >
               {tk === 'sales' ? t('invoices.sales') : t('invoices.purchases')}

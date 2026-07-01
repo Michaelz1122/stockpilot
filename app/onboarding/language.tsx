@@ -74,7 +74,7 @@ export default function Onboarding() {
 
       {step !== 'language' && (
         <Pressable className="mt-3 py-2" onPress={finish}>
-          <Text className="text-center text-sm text-slate-500">{t('onboarding.skip')}</Text>
+          <Text className="text-center text-sm text-muted-foreground">{t('onboarding.skip')}</Text>
         </Pressable>
       )}
     </Screen>
@@ -100,10 +100,10 @@ function LanguageStep({
         <View className="h-20 w-20 items-center justify-center rounded-3xl bg-brand-600">
           <Ionicons name="language" size={36} color="#fff" />
         </View>
-        <Text className="mt-5 text-center text-3xl font-bold text-slate-900 dark:text-slate-50">
+        <Text className="mt-5 text-center text-3xl font-bold text-foreground">
           {t('onboarding.chooseLanguage')}
         </Text>
-        <Text className="mt-2 text-center text-slate-500">
+        <Text className="mt-2 text-center text-muted-foreground">
           {t('onboarding.chooseLanguageHint')}
         </Text>
       </View>
@@ -129,12 +129,12 @@ function LanguageStep({
                       'text-xl font-bold',
                       isActive
                         ? 'text-brand-700 dark:text-brand-200'
-                        : 'text-slate-900 dark:text-slate-50',
+                        : 'text-foreground',
                     )}
                   >
                     {opt.native}
                   </Text>
-                  <Text className="text-xs text-slate-500">{opt.label}</Text>
+                  <Text className="text-xs text-muted-foreground">{opt.label}</Text>
                 </View>
               </View>
               <View
@@ -165,10 +165,10 @@ function WelcomeStep({ onNext, t }: { onNext: () => void; t: any }) {
       <View className="h-24 w-24 items-center justify-center rounded-3xl bg-brand-600">
         <Ionicons name="cube" size={44} color="#fff" />
       </View>
-      <Text className="mt-6 text-center text-3xl font-bold text-slate-900 dark:text-slate-50">
+      <Text className="mt-6 text-center text-3xl font-bold text-foreground">
         {t('onboarding.welcome.title')}
       </Text>
-      <Text className="mt-3 px-4 text-center text-base text-slate-600 dark:text-slate-300">
+      <Text className="mt-3 px-4 text-center text-base text-muted-foreground">
         {t('onboarding.welcome.subtitle')}
       </Text>
       <View className="mt-10 w-full">
@@ -241,8 +241,8 @@ function Feature({
         <Ionicons name={icon} size={22} color={TONE_FG[tone]} />
       </View>
       <View className="flex-1">
-        <Text className="text-lg font-bold text-slate-900 dark:text-slate-50">{title}</Text>
-        <Text className="mt-1 text-sm text-slate-600 dark:text-slate-300">{body}</Text>
+        <Text className="text-lg font-bold text-foreground">{title}</Text>
+        <Text className="mt-1 text-sm text-muted-foreground">{body}</Text>
       </View>
     </View>
   );

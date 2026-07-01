@@ -54,14 +54,14 @@ export default function Inventory() {
             <Card className="mb-2">
               <View className="flex-row items-center justify-between">
                 <View className="flex-1 pe-2">
-                  <Text className="font-semibold text-slate-900 dark:text-slate-50">
+                  <Text className="font-semibold text-foreground">
                     {p?.name ?? t('inventory.unknownProduct')}
                   </Text>
-                  <Text className="text-xs text-slate-500">
+                  <Text className="text-xs text-muted-foreground">
                     {formatDateTime(item.created_at)}
                   </Text>
                   {!!item.note && (
-                    <Text className="mt-1 text-xs text-slate-500">{item.note}</Text>
+                    <Text className="mt-1 text-xs text-muted-foreground">{item.note}</Text>
                   )}
                 </View>
                 <View className="items-end gap-1">

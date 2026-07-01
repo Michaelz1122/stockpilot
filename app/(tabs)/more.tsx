@@ -66,7 +66,7 @@ export default function More() {
           onPress={() => router.push('/export')}
         />
 
-        <Text className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <Text className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {t('more.stores')}
         </Text>
         <ListItem
@@ -93,7 +93,7 @@ export default function More() {
           }
         />
 
-        <Text className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <Text className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {t('more.account')}
         </Text>
         <ListItem

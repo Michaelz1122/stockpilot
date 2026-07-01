@@ -124,7 +124,7 @@ export default function CustomerDetail() {
           onPress={() => setActiveTab('invoices')}
           className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'invoices' ? 'bg-white shadow-sm dark:bg-slate-700' : ''}`}
         >
-          <Text className={`font-semibold ${activeTab === 'invoices' ? 'text-slate-900 dark:text-slate-50' : 'text-slate-500'}`}>
+          <Text className={`font-semibold ${activeTab === 'invoices' ? 'text-foreground' : 'text-muted-foreground'}`}>
             {t('customer.invoiceHistory')}
           </Text>
         </Pressable>
@@ -132,7 +132,7 @@ export default function CustomerDetail() {
           onPress={() => setActiveTab('payments')}
           className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'payments' ? 'bg-white shadow-sm dark:bg-slate-700' : ''}`}
         >
-          <Text className={`font-semibold ${activeTab === 'payments' ? 'text-slate-900 dark:text-slate-50' : 'text-slate-500'}`}>
+          <Text className={`font-semibold ${activeTab === 'payments' ? 'text-foreground' : 'text-muted-foreground'}`}>
             {lang === 'ar' ? 'الدفعات المستلمة' : 'Payments'}
           </Text>
         </Pressable>
@@ -143,7 +143,7 @@ export default function CustomerDetail() {
           data={sales.data ?? []}
           keyExtractor={(i) => i.id}
           ListEmptyComponent={
-            <Text className="text-sm text-slate-500">{t('customer.noInvoices')}</Text>
+            <Text className="text-sm text-muted-foreground">{t('customer.noInvoices')}</Text>
           }
           renderItem={({ item }) => (
             <Pressable
@@ -151,16 +151,16 @@ export default function CustomerDetail() {
               className="mb-2 flex-row items-center justify-between rounded-2xl bg-white p-4 dark:bg-slate-800"
             >
               <View>
-                <Text className="font-semibold text-slate-900 dark:text-slate-50">
+                <Text className="font-semibold text-foreground">
                   {item.invoice_number ?? `#${item.id.slice(0, 8)}`}
                 </Text>
-                <Text className="text-xs text-slate-500">{formatDate(item.invoice_date)}</Text>
+                <Text className="text-xs text-muted-foreground">{formatDate(item.invoice_date)}</Text>
               </View>
               <View className="items-end">
-                <Text className="font-bold text-slate-900 dark:text-slate-50">
+                <Text className="font-bold text-foreground">
                   {formatMoney(item.total, store?.currency)}
                 </Text>
-                <Text className="text-xs text-slate-500">
+                <Text className="text-xs text-muted-foreground">
                   {t('common.paid')} {formatMoney(item.paid, store?.currency)}
                 </Text>
               </View>
@@ -172,7 +172,7 @@ export default function CustomerDetail() {
           data={payments.data ?? []}
           keyExtractor={(i) => i.id}
           ListEmptyComponent={
-            <Text className="text-sm text-slate-500">
+            <Text className="text-sm text-muted-foreground">
               {lang === 'ar' ? 'لا توجد دفعات مسجلة' : 'No payments recorded'}
             </Text>
           }
@@ -182,10 +182,10 @@ export default function CustomerDetail() {
               className="mb-2 flex-row items-center justify-between rounded-2xl bg-white p-4 dark:bg-slate-800"
             >
               <View>
-                <Text className="font-semibold text-slate-900 dark:text-slate-50">
+                <Text className="font-semibold text-foreground">
                   {lang === 'ar' ? 'إيصال استلام' : 'Receipt'} #{item.id.slice(0, 8)}
                 </Text>
-                <Text className="text-xs text-slate-500">{formatDate(item.payment_date)}</Text>
+                <Text className="text-xs text-muted-foreground">{formatDate(item.payment_date)}</Text>
               </View>
               <View className="items-end">
                 <Text className="font-bold text-emerald-600">

@@ -38,7 +38,7 @@ export default function ExportScreen() {
   return (
     <Screen padded>
       <Header title={t('export.title')} subtitle={store?.name} showBack />
-      <Text className="mb-2 text-sm text-slate-500">{t('export.description')}</Text>
+      <Text className="mb-2 text-sm text-muted-foreground">{t('export.description')}</Text>
       <ListItem
         title={busy === 'products' ? t('export.exporting', { name: t('export.products') }) : t('export.products')}
         subtitle={t('export.productsHint')}
