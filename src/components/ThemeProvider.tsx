@@ -19,7 +19,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme, colorScheme]);
 
   return (
-    <View style={{ flex: 1 }} className={getResolvedTheme() === 'dark' ? 'dark bg-background' : 'bg-background'}>
+    <View style={{ flex: 1 }} className={getResolvedTheme() === 'dark' ? 'dark bg-background' : 'light bg-background'}>
       {children}
     </View>
   );

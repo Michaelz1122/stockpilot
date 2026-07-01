@@ -44,23 +44,22 @@ export function Select<T extends string = string>({
   return (
     <View className="mb-4">
       {label && (
-        <Text className="mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-200">
+        <Text className="mb-1.5 text-sm font-medium text-foreground">
           {label}
         </Text>
       )}
       <Pressable
         onPress={() => setOpen(true)}
         className={cn(
-          'flex-row items-center justify-between rounded-xl border bg-white px-4 py-3',
-          'dark:bg-slate-800',
-          error ? 'border-red-500' : 'border-slate-200 dark:border-slate-700',
+          'flex-row items-center justify-between rounded-xl border bg-card px-4 py-3',
+          error ? 'border-red-500' : 'border-border',
         )}
       >
         <Text
           className={
             selected
-              ? 'text-base text-slate-900 dark:text-slate-100'
-              : 'text-base text-slate-400'
+              ? 'text-base text-card-foreground'
+              : 'text-base text-muted-foreground'
           }
         >
           {selected?.label ?? ph}
@@ -80,11 +79,11 @@ export function Select<T extends string = string>({
           >
             <Pressable
               onPress={(e) => e.stopPropagation()}
-              className="max-h-[85%] rounded-t-3xl bg-white p-4 dark:bg-slate-900"
+              className="max-h-[85%] rounded-t-3xl bg-card p-4"
               style={{ paddingBottom: Math.max(insets.bottom, 24) }}
             >
               <View className="mb-3 flex-row items-center justify-between">
-                <Text className="text-lg font-bold text-slate-900 dark:text-slate-50">
+                <Text className="text-lg font-bold text-card-foreground">
                   {label ?? 'Choose'}
                 </Text>
                 <Pressable onPress={() => setOpen(false)}>
@@ -92,14 +91,14 @@ export function Select<T extends string = string>({
                 </Pressable>
               </View>
               {searchable && (
-                <View className="mb-3 flex-row items-center rounded-xl border border-slate-200 px-3 dark:border-slate-700">
+                <View className="mb-3 flex-row items-center rounded-xl border border-border bg-background px-3">
                   <Ionicons name="search" size={16} color="#94a3b8" />
                   <TextInput
                     value={query}
                     onChangeText={setQuery}
                     placeholder={t('common.search')}
                     placeholderTextColor="#94a3b8"
-                    className="ms-2 flex-1 py-2 text-slate-900 dark:text-slate-100"
+                    className="ms-2 flex-1 py-2 text-foreground"
                   />
                 </View>
               )}
@@ -112,14 +111,14 @@ export function Select<T extends string = string>({
                       onChange(item.value);
                       setOpen(false);
                     }}
-                    className="flex-row items-center justify-between rounded-xl px-3 py-3 active:bg-slate-100 dark:active:bg-slate-800"
+                    className="flex-row items-center justify-between rounded-xl px-3 py-3 active:bg-secondary"
                   >
                     <View className="flex-1">
-                      <Text className="text-base text-slate-900 dark:text-slate-100">
+                      <Text className="text-base text-card-foreground">
                         {item.label}
                       </Text>
                       {!!item.subtitle && (
-                        <Text className="text-xs text-slate-500">{item.subtitle}</Text>
+                        <Text className="text-xs text-muted-foreground">{item.subtitle}</Text>
                       )}
                     </View>
                     {item.value === value && (
@@ -128,7 +127,7 @@ export function Select<T extends string = string>({
                   </Pressable>
                 )}
                 ListEmptyComponent={
-                  <Text className="py-6 text-center text-slate-500">
+                  <Text className="py-6 text-center text-muted-foreground">
                     No options
                   </Text>
                 }

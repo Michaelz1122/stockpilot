@@ -22,11 +22,11 @@ export function EmptyState({
       <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
         <Ionicons name={icon} size={36} color="#64748b" />
       </View>
-      <Text className="text-center text-lg font-semibold text-slate-900 dark:text-slate-100">
+      <Text className="text-center text-lg font-semibold text-card-foreground">
         {title}
       </Text>
       {description && (
-        <Text className="mt-2 text-center text-sm text-slate-500">{description}</Text>
+        <Text className="mt-2 text-center text-sm text-muted-foreground">{description}</Text>
       )}
       {actionLabel && onAction && (
         <View className="mt-6">

@@ -17,15 +17,15 @@ interface Props extends Omit<PressableProps, 'children'> {
 const VARIANTS: Record<Variant, { container: string; text: string }> = {
   primary: { container: 'bg-brand-600 active:bg-brand-700', text: 'text-white' },
   secondary: {
-    container: 'bg-slate-100 active:bg-slate-200 dark:bg-slate-800',
-    text: 'text-slate-900 dark:text-slate-100',
+    container: 'bg-secondary active:bg-accent',
+    text: 'text-secondary-foreground',
   },
   ghost: { container: 'bg-transparent', text: 'text-brand-700 dark:text-brand-300' },
   danger: { container: 'bg-red-600 active:bg-red-700', text: 'text-white' },
   outline: {
     container:
-      'bg-transparent border border-slate-300 dark:border-slate-600 active:bg-slate-100 dark:active:bg-slate-800',
-    text: 'text-slate-900 dark:text-slate-100',
+      'bg-transparent border border-border active:bg-secondary',
+    text: 'text-foreground',
   },
 };
 

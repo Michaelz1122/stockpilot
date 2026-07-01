@@ -58,13 +58,13 @@ export default function Contacts() {
               'flex-1 rounded-xl py-3',
               tab === tk
                 ? 'bg-brand-600'
-                : 'bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60',
+                : 'bg-card border border-border',
             )}
           >
             <Text
               className={cn(
                 'text-center font-semibold',
-                tab === tk ? 'text-white' : 'text-slate-900 dark:text-slate-100',
+                tab === tk ? 'text-white' : 'text-card-foreground',
               )}
             >
               {tk === 'customers' ? t('contacts.customers') : t('contacts.suppliers')}

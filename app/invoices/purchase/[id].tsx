@@ -34,7 +34,7 @@ export default function PurchaseDetail() {
     return (
       <Screen>
         <Header title={t('invoices.purchases')} showBack />
-        <Text className="text-slate-500">{t('common.loading')}</Text>
+        <Text className="text-muted-foreground">{t('common.loading')}</Text>
       </Screen>
     );
   }
@@ -126,7 +126,7 @@ export default function PurchaseDetail() {
 
         <View className="mt-4">
           <View className="mb-2 flex-row items-center justify-between">
-            <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            <Text className="text-sm font-semibold text-foreground">
               {t('invoices.items')}
             </Text>
             <Badge label={String(i.items.length)} tone="info" />
@@ -136,16 +136,16 @@ export default function PurchaseDetail() {
             return (
               <Card key={item.id} className="mb-2">
                 <View className="flex-row items-start gap-3">
-                  <View className="h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700">
-                    <Text className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                  <View className="h-8 w-8 items-center justify-center rounded-full bg-secondary">
+                    <Text className="text-xs font-bold text-secondary-foreground">
                       {idx + 1}
                     </Text>
                   </View>
                   <View className="flex-1">
-                    <Text className="font-semibold text-slate-900 dark:text-slate-50">
+                    <Text className="font-semibold text-card-foreground">
                       {p?.name ?? t('common.unknown')}
                     </Text>
-                    <Text className="mt-1 text-xs text-slate-500">
+                    <Text className="mt-1 text-xs text-muted-foreground">
                       {formatNumber(item.quantity)} × {formatMoney(item.unit_cost, store?.currency)}
                     </Text>
                   </View>
@@ -160,26 +160,26 @@ export default function PurchaseDetail() {
 
         <Card className="mt-4">
           <View className="flex-row justify-between">
-            <Text className="text-slate-500">{t('invoices.subtotal')}</Text>
-            <Text>{formatMoney(i.subtotal, store?.currency)}</Text>
+            <Text className="text-muted-foreground">{t('invoices.subtotal')}</Text>
+            <Text className="text-card-foreground">{formatMoney(i.subtotal, store?.currency)}</Text>
           </View>
           {Number(i.discount) > 0 && (
             <View className="mt-1 flex-row justify-between">
-              <Text className="text-slate-500">{t('invoices.discount')}</Text>
+              <Text className="text-muted-foreground">{t('invoices.discount')}</Text>
               <Text className="text-amber-600">
                 -{formatMoney(i.discount, store?.currency)}
               </Text>
             </View>
           )}
-          <View className="mt-3 flex-row items-center justify-between border-t border-slate-200 pt-3 dark:border-slate-700">
-            <Text className="text-base font-bold">{t('invoices.total')}</Text>
+          <View className="mt-3 flex-row items-center justify-between border-t border-border pt-3">
+            <Text className="text-base font-bold text-card-foreground">{t('invoices.total')}</Text>
             <Text className="text-2xl font-bold text-emerald-600">
               {formatMoney(i.total, store?.currency)}
             </Text>
           </View>
           <View className="mt-2 flex-row justify-between">
-            <Text className="text-slate-500">{t('invoices.paid')}</Text>
-            <Text>{formatMoney(i.paid, store?.currency)}</Text>
+            <Text className="text-muted-foreground">{t('invoices.paid')}</Text>
+            <Text className="text-card-foreground">{formatMoney(i.paid, store?.currency)}</Text>
           </View>
           {remaining > 0 && (
             <View className="mt-1 flex-row justify-between">

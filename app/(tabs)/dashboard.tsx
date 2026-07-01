@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ActivityIndicator, Pressable, RefreshControl, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, RefreshControl, Text, View, useColorScheme } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/components/ui/Screen';
@@ -31,7 +31,7 @@ export default function Dashboard() {
     return (
       <Screen>
         <Header title={t('dashboard.title')} />
-        <Text className="text-slate-500">{t('dashboard.noActiveStore')}</Text>
+        <Text className="text-muted-foreground">{t('dashboard.noActiveStore')}</Text>
       </Screen>
     );
   }
@@ -132,7 +132,7 @@ export default function Dashboard() {
           </View>
 
           <Card className="mt-4">
-            <Text className="mb-3 text-base font-bold text-slate-900 dark:text-slate-50">
+            <Text className="mb-3 text-base font-bold text-card-foreground">
               {t('dashboard.salesTrend')}
             </Text>
             {summary.data.salesTrend.length === 0 ? (
@@ -145,7 +145,7 @@ export default function Dashboard() {
                       className="w-full rounded-t bg-brand-500"
                       style={{ height: Math.max(4, (d.sales / max) * 100) }}
                     />
-                    <Text className="mt-1 text-[10px] text-slate-400" numberOfLines={1}>
+                    <Text className="mt-1 text-[10px] text-muted-foreground" numberOfLines={1}>
                       {d.day.slice(5)}
                     </Text>
                   </View>
@@ -174,16 +174,16 @@ export default function Dashboard() {
           <View className="mt-3 flex-row gap-3">
             <Pressable
               onPress={() => router.push('/import')}
-              className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-slate-200 py-4 dark:bg-slate-800"
+              className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-secondary py-4"
             >
-              <Ionicons name="cloud-upload" color="#0f172a" size={20} />
-              <Text className="font-semibold text-slate-900 dark:text-slate-50">
+              <Ionicons name="cloud-upload" color={useColorScheme() === 'dark' ? '#f8fafc' : '#0f172a'} size={20} />
+              <Text className="font-semibold text-secondary-foreground">
                 {t('dashboard.importExcel')}
               </Text>
             </Pressable>
             <Pressable
               onPress={() => router.push('/ai')}
-              className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-slate-900 py-4"
+              className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-slate-900 dark:bg-slate-700 py-4"
             >
               <Ionicons name="sparkles" color="#fff" size={20} />
               <Text className="font-semibold text-white">{t('dashboard.aiAssistant')}</Text>

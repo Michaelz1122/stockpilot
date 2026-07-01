@@ -74,13 +74,13 @@ export default function Reports() {
             onPress={() => setView(v)}
             className={cn(
               'flex-1 rounded-xl px-2 py-2',
-              view === v ? 'bg-brand-600' : 'bg-white dark:bg-slate-800',
+              view === v ? 'bg-brand-600' : 'bg-card border border-border',
             )}
           >
             <Text
               className={cn(
                 'text-center text-xs font-semibold',
-                view === v ? 'text-white' : 'text-slate-700 dark:text-slate-200',
+                view === v ? 'text-white' : 'text-card-foreground',
               )}
             >
               {viewLabel[v]}
@@ -96,10 +96,10 @@ export default function Reports() {
           ListHeaderComponent={
             <>
               <Card>
-                <View className="flex-row justify-between"><Text className="text-slate-500">{t('dashboard.revenue30d')}</Text><Text className="font-bold">{formatMoney(dashboard.data?.revenue30d ?? 0, store?.currency)}</Text></View>
-                <View className="mt-1 flex-row justify-between"><Text className="text-slate-500">{t('dashboard.profit30d')}</Text><Text className="font-bold text-emerald-600">{formatMoney(dashboard.data?.profit30d ?? 0, store?.currency)}</Text></View>
-                <View className="mt-1 flex-row justify-between"><Text className="text-slate-500">{t('dashboard.inventoryValue')}</Text><Text className="font-bold">{formatMoney(dashboard.data?.inventoryValue ?? 0, store?.currency)}</Text></View>
-                <View className="mt-1 flex-row justify-between"><Text className="text-slate-500">{t('dashboard.lowStockCount')}</Text><Text className="font-bold">{dashboard.data?.lowStockCount ?? 0}</Text></View>
+                <View className="flex-row justify-between"><Text className="text-muted-foreground">{t('dashboard.revenue30d')}</Text><Text className="font-bold text-card-foreground">{formatMoney(dashboard.data?.revenue30d ?? 0, store?.currency)}</Text></View>
+                <View className="mt-1 flex-row justify-between"><Text className="text-muted-foreground">{t('dashboard.profit30d')}</Text><Text className="font-bold text-emerald-600">{formatMoney(dashboard.data?.profit30d ?? 0, store?.currency)}</Text></View>
+                <View className="mt-1 flex-row justify-between"><Text className="text-muted-foreground">{t('dashboard.inventoryValue')}</Text><Text className="font-bold text-card-foreground">{formatMoney(dashboard.data?.inventoryValue ?? 0, store?.currency)}</Text></View>
+                <View className="mt-1 flex-row justify-between"><Text className="text-muted-foreground">{t('dashboard.lowStockCount')}</Text><Text className="font-bold text-card-foreground">{dashboard.data?.lowStockCount ?? 0}</Text></View>
               </Card>
               <View className="mt-3 flex-row gap-2">
                 {(['day', 'week', 'month', 'year'] as Period[]).map((p) => (
@@ -108,13 +108,13 @@ export default function Reports() {
                     onPress={() => setPeriod(p)}
                     className={cn(
                       'flex-1 rounded-lg py-2',
-                      period === p ? 'bg-slate-900' : 'bg-slate-100 dark:bg-slate-800',
+                      period === p ? 'bg-slate-900 dark:bg-slate-600' : 'bg-secondary',
                     )}
                   >
                     <Text
                       className={cn(
                         'text-center text-xs font-semibold',
-                        period === p ? 'text-white' : 'text-slate-700 dark:text-slate-200',
+                        period === p ? 'text-white' : 'text-secondary-foreground',
                       )}
                     >
                       {t(`reports.period.${p}`)}
@@ -122,7 +122,7 @@ export default function Reports() {
                   </Pressable>
                 ))}
               </View>
-              <Text className="mt-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
+              <Text className="mt-3 text-sm font-semibold text-foreground">
                 {t('reports.salesBy', { period: t(`reports.period.${period}`) })}
               </Text>
             </>
@@ -167,7 +167,7 @@ export default function Reports() {
             />
           )}
           ListEmptyComponent={
-            <Text className="text-sm text-slate-500">{t('reports.allHealthy')}</Text>
+            <Text className="text-sm text-muted-foreground">{t('reports.allHealthy')}</Text>
           }
         />
       )}
@@ -189,7 +189,7 @@ export default function Reports() {
             />
           )}
           ListEmptyComponent={
-            <Text className="text-sm text-slate-500">{t('reports.noSales')}</Text>
+            <Text className="text-sm text-muted-foreground">{t('reports.noSales')}</Text>
           }
         />
       )}
@@ -205,7 +205,7 @@ export default function Reports() {
           keyExtractor={(it: any, idx) => it.id ?? `h-${idx}`}
           renderItem={({ item }: any) =>
             item.header ? (
-              <Text className="mb-1 mt-3 text-xs font-semibold uppercase text-slate-500">
+              <Text className="mb-1 mt-3 text-xs font-semibold uppercase text-muted-foreground">
                 {item.header}
               </Text>
             ) : (

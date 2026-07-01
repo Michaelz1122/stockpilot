@@ -41,13 +41,13 @@ export function StoreSwitcher() {
     <>
       <Pressable
         onPress={() => setOpen(true)}
-        className="flex-row items-center gap-2 rounded-full bg-white px-3 py-2 dark:bg-slate-800"
+        className="flex-row items-center gap-2 rounded-full bg-card border border-border px-3 py-2"
       >
         <View className="h-6 w-6 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/50">
           <Ionicons name="storefront" size={12} color="#2563eb" />
         </View>
         <Text
-          className="max-w-[120px] text-sm font-semibold text-slate-900 dark:text-slate-100"
+          className="max-w-[120px] text-sm font-semibold text-card-foreground"
           numberOfLines={1}
         >
           {active?.name ?? t('store.none')}
@@ -63,11 +63,11 @@ export function StoreSwitcher() {
       >
         <Pressable className="flex-1 justify-end bg-black/40" onPress={() => setOpen(false)}>
           <Pressable
-            className="max-h-[70%] rounded-t-3xl bg-white p-4 dark:bg-slate-900"
+            className="max-h-[70%] rounded-t-3xl bg-card p-4 border-t border-border"
             onPress={(e) => e.stopPropagation()}
           >
             <View className="mb-3 flex-row items-center justify-between">
-              <Text className="text-lg font-bold text-slate-900 dark:text-slate-50">
+              <Text className="text-lg font-bold text-card-foreground">
                 {t('store.switch')}
               </Text>
               <Pressable
@@ -75,9 +75,9 @@ export function StoreSwitcher() {
                   setOpen(false);
                   router.push('/stores');
                 }}
-                className="rounded-full bg-slate-100 px-3 py-1.5 dark:bg-slate-800"
+                className="rounded-full bg-secondary px-3 py-1.5"
               >
-                <Text className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <Text className="text-xs font-semibold text-secondary-foreground">
                   {t('store.manage')}
                 </Text>
               </Pressable>
@@ -97,10 +97,10 @@ export function StoreSwitcher() {
                       className="flex-1 flex-row items-center justify-between rounded-xl py-3"
                     >
                       <View className="flex-1">
-                        <Text className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                        <Text className="text-base font-semibold text-card-foreground">
                           {item.name}
                         </Text>
-                        <Text className="text-xs text-slate-500">{item.store_type}</Text>
+                        <Text className="text-xs text-muted-foreground">{item.store_type}</Text>
                       </View>
                       {isActive && (
                         <Ionicons name="checkmark-circle" size={20} color="#2563eb" />

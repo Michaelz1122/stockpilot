@@ -55,7 +55,7 @@ export const Input = forwardRef<TextInput, Props>(function Input(
         <Text className="mt-1 text-xs text-red-500">{error}</Text>
       )}
       {!error && !!hint && (
-        <Text className="mt-1 text-xs text-slate-500">{hint}</Text>
+        <Text className="mt-1 text-xs text-muted-foreground">{hint}</Text>
       )}
     </View>
   );

@@ -12,7 +12,7 @@ interface Props {
 
 export function SearchBar({ value, onChangeText, placeholder = 'Search…', containerClassName, autoFocus }: Props) {
   return (
-    <View className={cn("mb-3 flex-row items-center rounded-xl border border-slate-200 bg-white px-3 dark:border-slate-700 dark:bg-slate-800", containerClassName)}>
+    <View className={cn("mb-3 flex-row items-center rounded-xl border border-border bg-card px-3", containerClassName)}>
       <Ionicons name="search" size={18} color="#64748b" />
       <TextInput
         value={value}
@@ -20,7 +20,7 @@ export function SearchBar({ value, onChangeText, placeholder = 'Search…', cont
         placeholder={placeholder}
         placeholderTextColor="#94a3b8"
         autoFocus={autoFocus}
-        className="ms-2 flex-1 py-3 text-base text-slate-900 dark:text-slate-100"
+        className="ms-2 flex-1 py-3 text-base text-foreground"
       />
     </View>
   );

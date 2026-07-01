@@ -88,12 +88,12 @@ export default function ManageStores() {
                   </View>
                   <View className="flex-1">
                     <View className="flex-row items-center gap-2">
-                      <Text className="text-base font-bold text-slate-900 dark:text-slate-50">
+                      <Text className="text-base font-bold text-card-foreground">
                         {item.name}
                       </Text>
                       {isActive && <Badge label={t('store.activeBadge')} tone="success" />}
                     </View>
-                    <Text className="text-xs text-slate-500">
+                    <Text className="text-xs text-muted-foreground">
                       {item.store_type} · {item.currency}
                     </Text>
                   </View>
@@ -101,7 +101,7 @@ export default function ManageStores() {
                 <View className="flex-row gap-1">
                   <Pressable
                     onPress={() => router.push(`/stores/edit?id=${item.id}`)}
-                    className="h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700"
+                    className="h-10 w-10 items-center justify-center rounded-full bg-secondary"
                   >
                     <Ionicons name="pencil" size={16} color="#475569" />
                   </Pressable>

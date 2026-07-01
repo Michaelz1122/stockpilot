@@ -117,20 +117,20 @@ export default function SupplierDetail() {
 
       <NotesEditor initialNotes={s.notes} onSave={saveNotes} />
 
-      <View className="mb-4 mt-6 flex-row rounded-xl bg-slate-200 p-1 dark:bg-slate-800">
+      <View className="mb-4 mt-6 flex-row rounded-xl bg-secondary p-1">
         <Pressable
           onPress={() => setActiveTab('invoices')}
-          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'invoices' ? 'bg-white shadow-sm dark:bg-slate-700' : ''}`}
+          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'invoices' ? 'bg-card shadow-sm' : ''}`}
         >
-          <Text className={`font-semibold ${activeTab === 'invoices' ? 'text-slate-900 dark:text-slate-50' : 'text-slate-500'}`}>
+          <Text className={`font-semibold ${activeTab === 'invoices' ? 'text-card-foreground' : 'text-muted-foreground'}`}>
             {t('supplier.purchaseHistory')}
           </Text>
         </Pressable>
         <Pressable
           onPress={() => setActiveTab('payments')}
-          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'payments' ? 'bg-white shadow-sm dark:bg-slate-700' : ''}`}
+          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'payments' ? 'bg-card shadow-sm' : ''}`}
         >
-          <Text className={`font-semibold ${activeTab === 'payments' ? 'text-slate-900 dark:text-slate-50' : 'text-slate-500'}`}>
+          <Text className={`font-semibold ${activeTab === 'payments' ? 'text-card-foreground' : 'text-muted-foreground'}`}>
             {lang === 'ar' ? 'الدفعات المسددة' : 'Payments'}
           </Text>
         </Pressable>
@@ -141,20 +141,20 @@ export default function SupplierDetail() {
           data={purchases.data ?? []}
           keyExtractor={(i) => i.id}
           ListEmptyComponent={
-            <Text className="text-sm text-slate-500">{t('supplier.noPurchases')}</Text>
+            <Text className="text-sm text-muted-foreground">{t('supplier.noPurchases')}</Text>
           }
           renderItem={({ item }) => (
             <Pressable
               onPress={() => router.push(`/invoices/purchase/${item.id}`)}
-              className="mb-2 flex-row items-center justify-between rounded-2xl bg-white p-4 dark:bg-slate-800"
+              className="mb-2 flex-row items-center justify-between rounded-2xl bg-card border border-border p-4"
             >
               <View>
-                <Text className="font-semibold text-slate-900 dark:text-slate-50">
+                <Text className="font-semibold text-card-foreground">
                   {item.invoice_number ?? `#${item.id.slice(0, 8)}`}
                 </Text>
-                <Text className="text-xs text-slate-500">{formatDate(item.invoice_date)}</Text>
+                <Text className="text-xs text-muted-foreground">{formatDate(item.invoice_date)}</Text>
               </View>
-              <Text className="font-bold text-slate-900 dark:text-slate-50">
+              <Text className="font-bold text-card-foreground">
                 {formatMoney(item.total, store?.currency)}
               </Text>
             </Pressable>
@@ -165,20 +165,20 @@ export default function SupplierDetail() {
           data={payments.data ?? []}
           keyExtractor={(i) => i.id}
           ListEmptyComponent={
-            <Text className="text-sm text-slate-500">
+            <Text className="text-sm text-muted-foreground">
               {lang === 'ar' ? 'لا توجد دفعات مسجلة' : 'No payments recorded'}
             </Text>
           }
           renderItem={({ item }) => (
             <Pressable
               onPress={() => router.push(`/payments/${item.id}` as any)}
-              className="mb-2 flex-row items-center justify-between rounded-2xl bg-white p-4 dark:bg-slate-800"
+              className="mb-2 flex-row items-center justify-between rounded-2xl bg-card border border-border p-4"
             >
               <View>
-                <Text className="font-semibold text-slate-900 dark:text-slate-50">
+                <Text className="font-semibold text-card-foreground">
                   {lang === 'ar' ? 'إيصال دفع' : 'Payment Receipt'} #{item.id.slice(0, 8)}
                 </Text>
-                <Text className="text-xs text-slate-500">{formatDate(item.payment_date)}</Text>
+                <Text className="text-xs text-muted-foreground">{formatDate(item.payment_date)}</Text>
               </View>
               <View className="items-end">
                 <Text className="font-bold text-emerald-600">

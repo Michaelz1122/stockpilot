@@ -36,7 +36,7 @@ export default function PaymentDetail() {
     return (
       <Screen>
         <Header title={lang === 'ar' ? 'الإيصال' : 'Receipt'} showBack />
-        <Text className="text-slate-500">{t('common.loading')}</Text>
+        <Text className="text-muted-foreground">{t('common.loading')}</Text>
       </Screen>
     );
   }
@@ -114,7 +114,7 @@ export default function PaymentDetail() {
 
         <Card className="mt-4">
           <View className="flex-row items-center justify-between">
-            <Text className="text-base font-bold text-slate-900 dark:text-slate-50">
+            <Text className="text-base font-bold text-card-foreground">
               {lang === 'ar' ? 'المبلغ' : 'Amount'}
             </Text>
             <Text className={`text-2xl font-bold ${isCustomer ? 'text-emerald-600' : 'text-rose-600'}`}>
@@ -125,10 +125,10 @@ export default function PaymentDetail() {
 
         {!!p.notes && (
           <Card className="mt-3">
-            <Text className="text-xs uppercase tracking-wide text-slate-500">
+            <Text className="text-xs uppercase tracking-wide text-muted-foreground">
               {t('invoices.notes')}
             </Text>
-            <Text className="mt-1 text-sm text-slate-700 dark:text-slate-200">
+            <Text className="mt-1 text-sm text-foreground">
               {p.notes}
             </Text>
           </Card>

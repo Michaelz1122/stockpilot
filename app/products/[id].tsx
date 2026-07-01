@@ -33,7 +33,7 @@ export default function ProductDetail() {
     return (
       <Screen>
         <Header title={t('nav.products')} showBack />
-        <Text className="text-slate-500">{t('common.loading')}</Text>
+        <Text className="text-muted-foreground">{t('common.loading')}</Text>
       </Screen>
     );
   }
@@ -81,8 +81,8 @@ export default function ProductDetail() {
       <Card>
         <View className="flex-row justify-between">
           <View>
-            <Text className="text-xs text-slate-500">{t('products.currentStock')}</Text>
-            <Text className="mt-1 text-3xl font-bold text-slate-900 dark:text-slate-50">
+            <Text className="text-xs text-muted-foreground">{t('products.currentStock')}</Text>
+            <Text className="mt-1 text-3xl font-bold text-card-foreground">
               {formatNumber(current)}
             </Text>
             <View className="mt-2">
@@ -99,12 +99,12 @@ export default function ProductDetail() {
             </View>
           </View>
           <View className="items-end">
-            <Text className="text-xs text-slate-500">{t('products.salePriceLabel')}</Text>
+            <Text className="text-xs text-muted-foreground">{t('products.salePriceLabel')}</Text>
             <Text className="mt-1 text-xl font-bold text-emerald-600">
               {formatMoney(p.sale_price, store?.currency)}
             </Text>
-            <Text className="mt-2 text-xs text-slate-500">{t('products.cost')}</Text>
-            <Text className="text-sm text-slate-700 dark:text-slate-200">
+            <Text className="mt-2 text-xs text-muted-foreground">{t('products.cost')}</Text>
+            <Text className="text-sm text-foreground">
               {formatMoney(p.purchase_price, store?.currency)}
             </Text>
           </View>
@@ -128,14 +128,14 @@ export default function ProductDetail() {
         />
       </View>
 
-      <Text className="mb-2 mt-4 text-sm font-semibold text-slate-700 dark:text-slate-200">
+      <Text className="mb-2 mt-4 text-sm font-semibold text-foreground">
         {t('products.stockHistory')}
       </Text>
       <FlatList
         data={txs.data ?? []}
         keyExtractor={(t) => t.id}
         ListEmptyComponent={
-          <Text className="text-sm text-slate-500">{t('products.noMovements')}</Text>
+          <Text className="text-sm text-muted-foreground">{t('products.noMovements')}</Text>
         }
         renderItem={({ item }) => (
           <Card className="mb-2">
@@ -145,11 +145,11 @@ export default function ProductDetail() {
                   label={item.type}
                   tone={item.type === 'IN' ? 'success' : item.type === 'OUT' ? 'danger' : 'info'}
                 />
-                <Text className="mt-1 text-xs text-slate-500">
+                <Text className="text-xs text-muted-foreground">
                   {formatDateTime(item.created_at)}
                 </Text>
                 {!!item.note && (
-                  <Text className="mt-1 text-sm text-slate-700 dark:text-slate-200">
+                  <Text className="mt-1 text-sm text-foreground">
                     {item.note}
                   </Text>
                 )}

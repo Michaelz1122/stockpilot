@@ -41,8 +41,8 @@ export function StatCard({
       <Container
         onPress={onPress}
         className={cn(
-          'flex-1 rounded-2xl bg-white p-3 dark:bg-slate-800 items-start justify-center',
-          'border border-slate-200/60 dark:border-slate-700/60',
+          'flex-1 rounded-2xl bg-card p-3 items-start justify-center',
+          'border border-border',
           onPress && 'active:opacity-70',
           className,
         )}
@@ -52,13 +52,13 @@ export function StatCard({
         </View>
         <Text
           numberOfLines={1}
-          className="mt-2 text-lg font-bold text-slate-900 dark:text-slate-50"
+          className="mt-2 text-lg font-bold text-card-foreground"
         >
           {value}
         </Text>
         <Text
           numberOfLines={1}
-          className="mt-0.5 text-[10px] text-slate-500"
+          className="mt-0.5 text-[10px] text-muted-foreground"
         >
           {label}
         </Text>
@@ -70,8 +70,8 @@ export function StatCard({
     <Container
       onPress={onPress}
       className={cn(
-        'flex-1 rounded-2xl bg-white p-4 dark:bg-slate-800',
-        'border border-slate-200/60 dark:border-slate-700/60',
+        'flex-1 rounded-2xl bg-card p-4',
+        'border border-border',
         onPress && 'active:opacity-70',
         className,
       )}
@@ -83,12 +83,12 @@ export function StatCard({
           <Ionicons name={icon} size={18} color={TONE_FG[tone]} />
         </View>
         <View className="flex-1">
-          <Text className="text-xs uppercase tracking-wide text-slate-500">
+          <Text className="text-xs uppercase tracking-wide text-muted-foreground">
             {label}
           </Text>
           <Text
             numberOfLines={1}
-            className="mt-0.5 text-lg font-bold text-slate-900 dark:text-slate-50"
+            className="mt-0.5 text-lg font-bold text-card-foreground"
           >
             {value}
           </Text>

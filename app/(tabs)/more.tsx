@@ -32,7 +32,7 @@ export default function More() {
     <Screen padded scroll>
       <Header title={t('nav.more')} right={<StoreSwitcher />} />
       <View>
-        <Text className="mb-2 mt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <Text className="mb-2 mt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {t('more.operations')}
         </Text>
         <ListItem
