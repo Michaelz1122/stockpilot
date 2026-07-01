@@ -40,7 +40,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (!i18nReady) return;
     (async () => {
-      const { AsyncStorage } = await import('@react-native-async-storage/async-storage');
+      const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
       const flagged = await AsyncStorage.getItem('sp.langInitialized');
       if (!flagged && segments[0] !== 'onboarding') {
         router.replace('/onboarding/language');
