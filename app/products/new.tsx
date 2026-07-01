@@ -111,7 +111,7 @@ export default function NewProduct() {
       <View className="px-4">
         <Header title={isEditing ? (lang === 'ar' ? 'تعديل الصنف' : 'Edit Product') : t('products.newTitle')} showBack />
       </View>
-      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
       
       <Controller
         control={control}

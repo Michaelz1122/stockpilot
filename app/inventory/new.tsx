@@ -69,7 +69,7 @@ export default function NewInventoryTx() {
       <View className="px-4">
         <Header title={t('inventory.newTitle')} showBack />
       </View>
-      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
       <Select
         label={t('inventory.product')}
         value={productId}

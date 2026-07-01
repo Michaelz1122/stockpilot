@@ -63,7 +63,7 @@ export default function NewPayment() {
       <View className="px-4">
         <Header title={title} showBack />
       </View>
-      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
       
       <View className="mt-4">
         {entity.data && (

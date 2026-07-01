@@ -167,7 +167,7 @@ export default function NewPurchase() {
       <View className="px-4">
         <Header title={isEditing ? t('invoices.editPurchase') : t('invoices.newPurchase')} showBack />
       </View>
-      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
         <Select
           label={t('invoices.supplier')}
           value={supplierId}

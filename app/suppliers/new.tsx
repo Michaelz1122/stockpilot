@@ -90,7 +90,7 @@ export default function NewSupplier() {
       <View className="px-4">
         <Header title={isEditing ? (lang === 'ar' ? 'تعديل المورد' : 'Edit Supplier') : t('supplier.newTitle')} showBack />
       </View>
-      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
       <Controller control={control} name="name" render={({ field }) => (
         <Input label={t('customer.name')} value={field.value} onChangeText={field.onChange} />
       )} />

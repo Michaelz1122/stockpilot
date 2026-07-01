@@ -22,7 +22,8 @@ export function Screen({
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <StatusBar style="auto" />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 0 : 0}
         style={{ flex: 1 }}
       >
         <Container

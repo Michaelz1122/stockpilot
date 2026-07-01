@@ -73,7 +73,7 @@ export default function EditStore() {
       <View className="px-4">
         <Header title={t('store.edit')} showBack />
       </View>
-      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
       <Controller
         control={control}
         name="name"
