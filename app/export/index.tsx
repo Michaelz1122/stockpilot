@@ -48,6 +48,7 @@ export default function ExportScreen() {
             'products',
             async () => {
               const list = await ProductsRepo.list(storeId!);
+              if (list.length === 0) throw new Error('لا توجد بيانات لتصديرها');
               return list.map((p) => ({
                 'الاسم': p.name,
                 'الكود': p.sku ?? '',
@@ -71,6 +72,7 @@ export default function ExportScreen() {
             'customers',
             async () => {
               const list = await CustomersRepo.list(storeId!);
+              if (list.length === 0) throw new Error('لا توجد بيانات لتصديرها');
               return list.map((c) => ({
                 'الاسم': c.name,
                 'رقم الهاتف': c.phone ?? '',
@@ -90,6 +92,7 @@ export default function ExportScreen() {
             'suppliers',
             async () => {
               const list = await SuppliersRepo.list(storeId!);
+              if (list.length === 0) throw new Error('لا توجد بيانات لتصديرها');
               return list.map((s) => ({
                 'الاسم': s.name,
                 'رقم الهاتف': s.phone ?? '',
@@ -109,6 +112,7 @@ export default function ExportScreen() {
             'inventory',
             async () => {
               const list = await InventoryRepo.list(storeId!);
+              if (list.length === 0) throw new Error('لا توجد بيانات لتصديرها');
               return list.map((tx) => ({
                 'التاريخ': tx.created_at,
                 'معرف المنتج': tx.product_id,
@@ -130,6 +134,7 @@ export default function ExportScreen() {
             'sales',
             async () => {
               const list = await SalesRepo.list(storeId!);
+              if (list.length === 0) throw new Error('لا توجد بيانات لتصديرها');
               return list.map((s) => ({
                 'رقم الفاتورة': s.invoice_number ?? s.id,
                 'التاريخ': s.invoice_date,
@@ -152,6 +157,7 @@ export default function ExportScreen() {
             'purchases',
             async () => {
               const list = await PurchasesRepo.list(storeId!);
+              if (list.length === 0) throw new Error('لا توجد بيانات لتصديرها');
               return list.map((p) => ({
                 'رقم الفاتورة': p.invoice_number ?? p.id,
                 'التاريخ': p.invoice_date,
@@ -169,3 +175,4 @@ export default function ExportScreen() {
     </Screen>
   );
 }
+

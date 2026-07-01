@@ -163,7 +163,7 @@ export const ExcelService = {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, sheetName);
     const wbBase64 = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
-    const uri = FileSystem.cacheDirectory + fileName;
+    const uri = FileSystem.documentDirectory + fileName;
     await FileSystem.writeAsStringAsync(uri, wbBase64, {
       encoding: 'base64',
     });
