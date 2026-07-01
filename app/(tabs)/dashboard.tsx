@@ -16,6 +16,7 @@ import { formatMoney, formatNumber } from '@/lib/format';
 export default function Dashboard() {
   const router = useRouter();
   const { t, lang } = useLocale();
+  const colorScheme = useColorScheme();
   const { storeId, store } = useActiveStore();
   const summary = useAsync(
     () => (storeId ? ReportsService.dashboard(storeId) : Promise.resolve(null)),
@@ -176,7 +177,7 @@ export default function Dashboard() {
               onPress={() => router.push('/import')}
               className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-secondary py-4"
             >
-              <Ionicons name="cloud-upload" color={useColorScheme() === 'dark' ? '#f8fafc' : '#0f172a'} size={20} />
+              <Ionicons name="cloud-upload" color={colorScheme === 'dark' ? '#f8fafc' : '#0f172a'} size={20} />
               <Text className="font-semibold text-secondary-foreground">
                 {t('dashboard.importExcel')}
               </Text>
