@@ -56,6 +56,7 @@ export const BackupService = {
         const { data } = await sb()
           .from(table as any)
           .select(`*, ${parentTable}!inner(store_id)`)
+          .limit(100000)
           .eq(`${parentTable}.store_id`, storeId);
         
         // Remove the joined parent data before saving
@@ -67,6 +68,7 @@ export const BackupService = {
         const { data } = await sb()
           .from(table as any)
           .select('*, products!inner(store_id)')
+          .limit(100000)
           .eq('products.store_id', storeId);
         backup.data.product_units = (data || []).map(row => {
           const { products: _, ...rest } = row as any;
@@ -76,6 +78,7 @@ export const BackupService = {
         const { data } = await sb()
           .from(table as any)
           .select('*')
+          .limit(100000)
           .eq('store_id', storeId);
         backup.data[table as keyof typeof backup.data] = data || [];
       }
