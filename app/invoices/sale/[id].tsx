@@ -82,9 +82,17 @@ export default function SaleDetail() {
           subtitle={formatDate(i.invoice_date)}
           showBack
           right={
-            <Pressable onPress={onDelete} className="p-1">
-              <Ionicons name="trash-outline" size={20} color="#ef4444" />
-            </Pressable>
+            <View className="flex-row items-center gap-2">
+              <Pressable
+                onPress={() => router.push(`/invoices/new-sale?id=${i.id}` as any)}
+                className="p-1"
+              >
+                <Ionicons name="pencil" size={20} className="text-foreground dark:text-slate-300" />
+              </Pressable>
+              <Pressable onPress={onDelete} className="p-1">
+                <Ionicons name="trash-outline" size={20} color="#ef4444" />
+              </Pressable>
+            </View>
           }
         />
       </View>
