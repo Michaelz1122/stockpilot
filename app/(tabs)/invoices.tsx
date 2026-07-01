@@ -70,7 +70,7 @@ export default function Invoices() {
         }
         className="mb-3 flex-row items-center justify-center gap-2 rounded-xl bg-primary py-3 active:opacity-90"
       >
-        <Ionicons name="add-circle" size={18} color="var(--primary-foreground)" />
+        <Ionicons name="add-circle" size={18} color="#FFFFFF" className="text-primary-foreground" />
         <Text className="font-semibold text-primary-foreground">
           {tab === 'sales' ? t('invoices.newSale') : t('invoices.newPurchase')}
         </Text>

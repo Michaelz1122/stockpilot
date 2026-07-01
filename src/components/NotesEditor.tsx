@@ -68,9 +68,9 @@ export function NotesEditor({ initialNotes, onSave, placeholder }: Props) {
         </Text>
         <View className="flex-row items-center">
           {saving ? (
-            <ActivityIndicator size="small" color="var(--muted-foreground)" />
+            <ActivityIndicator size="small" color="#475569" className="text-muted-foreground" />
           ) : saved && notes !== initialNotes ? (
-            <Ionicons name="checkmark" size={16} color="var(--primary)" />
+            <Ionicons name="checkmark" size={16} color="#0284C7" className="text-primary" />
           ) : null}
         </View>
       </View>
@@ -81,7 +81,7 @@ export function NotesEditor({ initialNotes, onSave, placeholder }: Props) {
         multiline
         numberOfLines={4}
         placeholder={placeholder || (t('customer.notesPlaceholder') || 'Enter notes here...')}
-        placeholderTextColor="var(--muted-foreground)"
+        placeholderTextcolor="#475569" className="text-muted-foreground"
         className="text-sm text-secondary-foreground"
         style={{ minHeight: 80, textAlignVertical: 'top' }}
       />

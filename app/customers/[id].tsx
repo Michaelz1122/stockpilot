@@ -75,7 +75,7 @@ export default function CustomerDetail() {
         right={
           <View className="flex-row items-center gap-4">
             <Pressable onPress={() => router.push(`/customers/new?id=${c.id}`)}>
-              <Ionicons name="pencil" size={20} color="var(--primary)" />
+              <Ionicons name="pencil" size={20} className="text-primary" />
             </Pressable>
             <Pressable
               onPress={() =>
@@ -92,7 +92,7 @@ export default function CustomerDetail() {
                 ])
               }
             >
-              <Ionicons name="trash" size={20} color="var(--destructive)" />
+              <Ionicons name="trash" size={20} className="text-destructive" />
             </Pressable>
           </View>
         }
@@ -122,7 +122,7 @@ export default function CustomerDetail() {
       <View className="mb-4 mt-6 flex-row rounded-xl bg-slate-200 p-1 dark:bg-slate-800">
         <Pressable
           onPress={() => setActiveTab('invoices')}
-          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'invoices' ? 'bg-white shadow-sm dark:bg-slate-700' : ''}`}
+          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'invoices' ? 'bg-white dark:bg-slate-700' : ''}`}
         >
           <Text className={`font-semibold ${activeTab === 'invoices' ? 'text-foreground' : 'text-muted-foreground'}`}>
             {t('customer.invoiceHistory')}
@@ -130,7 +130,7 @@ export default function CustomerDetail() {
         </Pressable>
         <Pressable
           onPress={() => setActiveTab('payments')}
-          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'payments' ? 'bg-white shadow-sm dark:bg-slate-700' : ''}`}
+          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'payments' ? 'bg-white dark:bg-slate-700' : ''}`}
         >
           <Text className={`font-semibold ${activeTab === 'payments' ? 'text-foreground' : 'text-muted-foreground'}`}>
             {lang === 'ar' ? 'الدفعات المستلمة' : 'Payments'}

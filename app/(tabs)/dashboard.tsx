@@ -61,7 +61,7 @@ export default function Dashboard() {
               onPress={() => router.push('/reports')}
               className="mb-4 rounded-xl border border-destructive/30 bg-destructive/10 p-4 flex-row items-center gap-3"
             >
-              <Ionicons name="warning" size={24} color="var(--destructive)" />
+              <Ionicons name="warning" size={24} color="#EF4444" className="text-destructive" />
               <View className="flex-1">
                 <Text className="font-bold text-red-600 dark:text-red-400">
                   {lang === 'ar' ? 'تنبيه المخزون' : 'Stock Alert'}
@@ -72,7 +72,7 @@ export default function Dashboard() {
                     : `You have ${summary.data.outOfStockCount} products out of stock, and ${summary.data.lowStockCount} low on stock.`}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color="var(--destructive)" />
+              <Ionicons name="chevron-forward" size={20} color="#EF4444" className="text-destructive" />
             </Pressable>
           )}
 

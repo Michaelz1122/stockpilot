@@ -217,7 +217,7 @@ export default function NewSale() {
           onPress={() => setPickerOpen(true)}
           className="mb-3 flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-border py-4 bg-card active:bg-secondary"
         >
-          <Ionicons name="add" size={18} color="var(--primary)" />
+          <Ionicons name="add" size={18} color="#0284C7" className="text-primary" />
           <Text className="font-semibold text-primary">
             {t('invoices.addProduct')}
           </Text>

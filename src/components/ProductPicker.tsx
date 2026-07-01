@@ -134,7 +134,7 @@ export function ProductPicker({ visible, onClose, onPick, currency, storeId, pro
 
           {loading && data.length === 0 ? (
             <View className="py-12 items-center justify-center">
-              <ActivityIndicator size="large" color="var(--primary)" />
+              <ActivityIndicator size="large" color="#0284C7" className="text-primary" />
             </View>
           ) : (
             <FlatList
@@ -181,7 +181,7 @@ export function ProductPicker({ visible, onClose, onPick, currency, storeId, pro
               ListFooterComponent={
                 loadingMore ? (
                   <View className="py-4 items-center justify-center">
-                    <ActivityIndicator size="small" color="var(--primary)" />
+                    <ActivityIndicator size="small" color="#0284C7" className="text-primary" />
                   </View>
                 ) : null
               }

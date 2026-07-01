@@ -196,7 +196,7 @@ export default function Products() {
           onPress={() => setSheetOpen(true)}
           className="bg-card border border-border rounded-xl justify-center items-center px-4 active:bg-secondary"
         >
-          <Ionicons name="filter" size={20} color="var(--primary)" />
+          <Ionicons name="filter" size={20} color="#0284C7" className="text-primary" />
         </Pressable>
       </View>
 
@@ -207,7 +207,7 @@ export default function Products() {
               {getSortLabel(sortBy, lang)}
             </Text>
             <Pressable onPress={() => changeSort('relevance')} className="p-0.5 rounded-full active:bg-primary/20">
-              <Ionicons name="close-circle" size={14} color="var(--primary)" />
+              <Ionicons name="close-circle" size={14} color="#0284C7" className="text-primary" />
             </Pressable>
           </View>
         </View>
@@ -218,21 +218,21 @@ export default function Products() {
           onPress={() => router.push('/products/new')}
           className="flex-1 flex-row items-center justify-center gap-2 rounded-xl bg-primary py-3 active:opacity-90"
         >
-          <Ionicons name="add" size={18} color="var(--primary-foreground)" />
+          <Ionicons name="add" size={18} color="#FFFFFF" className="text-primary-foreground" />
           <Text className="font-semibold text-primary-foreground">{t('products.add')}</Text>
         </Pressable>
         <Pressable
           onPress={() => router.push('/import')}
           className="flex-grow flex-row items-center justify-center gap-2 rounded-xl bg-secondary py-3 active:bg-border/60"
         >
-          <Ionicons name="cloud-upload" size={18} color="var(--secondary-foreground)" />
+          <Ionicons name="cloud-upload" size={18} color="#0F172A" className="text-secondary-foreground dark:text-slate-200" />
           <Text className="font-semibold text-secondary-foreground">{t('products.import')}</Text>
         </Pressable>
         <Pressable
           onPress={() => router.push('/export')}
           className="flex-grow flex-row items-center justify-center gap-2 rounded-xl bg-secondary py-3 active:bg-border/60"
         >
-          <Ionicons name="cloud-download" size={18} color="var(--secondary-foreground)" />
+          <Ionicons name="cloud-download" size={18} color="#0F172A" className="text-secondary-foreground dark:text-slate-200" />
           <Text className="font-semibold text-secondary-foreground">{t('products.export')}</Text>
         </Pressable>
       </View>
@@ -259,14 +259,14 @@ export default function Products() {
             />
           ) : (
             <View className="py-12 items-center justify-center">
-              <ActivityIndicator size="large" color="var(--primary)" />
+              <ActivityIndicator size="large" color="#0284C7" className="text-primary" />
             </View>
           )
         }
         ListFooterComponent={
           loadingMore ? (
             <View className="py-4 items-center justify-center">
-              <ActivityIndicator size="small" color="var(--primary)" />
+              <ActivityIndicator size="small" color="#0284C7" className="text-primary" />
             </View>
           ) : ListBottomSpacer
         }
@@ -295,7 +295,7 @@ export default function Products() {
                     {getSortLabel(option, lang)}
                   </Text>
                   {sortBy === option && (
-                    <Ionicons name="checkmark-circle" size={20} color="var(--primary)" />
+                    <Ionicons name="checkmark-circle" size={20} color="#0284C7" className="text-primary" />
                   )}
                 </Pressable>
               ))}

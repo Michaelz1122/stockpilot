@@ -122,10 +122,10 @@ export default function DataHealthScreen() {
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="var(--primary)" className="mt-8" />
+        <ActivityIndicator size="large" color="#0284C7" className="text-primary" className="mt-8" />
       ) : duplicates.length === 0 ? (
         <View className="flex-1 items-center justify-center pt-10">
-          <Ionicons name="checkmark-circle" size={64} color="var(--primary)" />
+          <Ionicons name="checkmark-circle" size={64} color="#0284C7" className="text-primary" />
           <Text className="mt-4 font-semibold text-lg text-card-foreground">
             {lang === 'ar' ? 'بياناتك سليمة' : 'Your data is healthy!'}
           </Text>
@@ -141,7 +141,7 @@ export default function DataHealthScreen() {
           renderItem={({ item: group, index }) => (
             <Card className="mb-4 bg-card border-destructive/20">
               <View className="flex-row items-center mb-3">
-                <Ionicons name="warning" size={20} color="var(--destructive)" />
+                <Ionicons name="warning" size={20} color="#EF4444" className="text-destructive" />
                 <Text className="ml-2 font-bold text-lg text-card-foreground">
                   {group.type.toUpperCase()}: {group.name}
                 </Text>

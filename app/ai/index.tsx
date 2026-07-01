@@ -272,7 +272,7 @@ Critical rules:
           ListFooterComponent={
             sending ? (
               <View className="my-2 self-start rounded-2xl bg-card border border-border px-4 py-3">
-                <ActivityIndicator size="small" color="var(--primary)" />
+                <ActivityIndicator size="small" color="#0284C7" className="text-primary" />
               </View>
             ) : null
           }
@@ -318,9 +318,9 @@ Critical rules:
             className="h-11 w-11 items-center justify-center rounded-full bg-secondary"
           >
             {pickingFile ? (
-              <ActivityIndicator size="small" color="var(--primary)" />
+              <ActivityIndicator size="small" color="#0284C7" className="text-primary" />
             ) : (
-              <Ionicons name="attach" size={20} color="var(--muted-foreground)" />
+              <Ionicons name="attach" size={20} color="#475569" className="text-muted-foreground" />
             )}
           </Pressable>
           <TextInput

@@ -301,7 +301,7 @@ export default function NewProduct() {
                   <View key={i} className="flex-row items-center bg-secondary rounded-full px-3 py-1">
                     <Text className="text-sm text-secondary-foreground mr-2">{u}</Text>
                     <Pressable onPress={() => removeUnit(i)}>
-                      <Ionicons name="close-circle" size={18} color="var(--muted-foreground)" />
+                      <Ionicons name="close-circle" size={18} color="#475569" className="text-muted-foreground" />
                     </Pressable>
                   </View>
                 ))}

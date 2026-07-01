@@ -75,7 +75,7 @@ export default function SupplierDetail() {
         right={
           <View className="flex-row items-center gap-4">
             <Pressable onPress={() => router.push(`/suppliers/new?id=${s.id}`)}>
-              <Ionicons name="pencil" size={20} color="var(--primary)" />
+              <Ionicons name="pencil" size={20} className="text-primary" />
             </Pressable>
             <Pressable
               onPress={() =>
@@ -92,7 +92,7 @@ export default function SupplierDetail() {
                 ])
               }
             >
-              <Ionicons name="trash" size={20} color="var(--destructive)" />
+              <Ionicons name="trash" size={20} className="text-destructive" />
             </Pressable>
           </View>
         }
@@ -120,7 +120,7 @@ export default function SupplierDetail() {
       <View className="mb-4 mt-6 flex-row rounded-xl bg-secondary p-1">
         <Pressable
           onPress={() => setActiveTab('invoices')}
-          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'invoices' ? 'bg-card shadow-sm' : ''}`}
+          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'invoices' ? 'bg-card dark:bg-slate-700' : ''}`}
         >
           <Text className={`font-semibold ${activeTab === 'invoices' ? 'text-card-foreground' : 'text-muted-foreground'}`}>
             {t('supplier.purchaseHistory')}
@@ -128,7 +128,7 @@ export default function SupplierDetail() {
         </Pressable>
         <Pressable
           onPress={() => setActiveTab('payments')}
-          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'payments' ? 'bg-card shadow-sm' : ''}`}
+          className={`flex-1 items-center rounded-lg py-2 ${activeTab === 'payments' ? 'bg-card dark:bg-slate-700' : ''}`}
         >
           <Text className={`font-semibold ${activeTab === 'payments' ? 'text-card-foreground' : 'text-muted-foreground'}`}>
             {lang === 'ar' ? 'الدفعات المسددة' : 'Payments'}

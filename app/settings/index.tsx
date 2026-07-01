@@ -72,7 +72,7 @@ export default function Settings() {
                   </Text>
                 </View>
                 {active && (
-                  <Ionicons name="checkmark-circle" size={22} color="var(--primary)" />
+                  <Ionicons name="checkmark-circle" size={22} color="#0284C7" className="text-primary" />
                 )}
               </Pressable>
             );
